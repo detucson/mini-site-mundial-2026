@@ -1,0 +1,2403 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mundial 2026 — Miravos País</title>
+  
+  <!-- Google Fonts: Outfit (headings) & Inter (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind Play CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              platinum: '#ECEDF1',
+              white: '#FFFFFF',
+              bone: '#DFD5CA',
+              indigo: '#4E31A0',
+              slate: '#B1AEBD',
+              snow: '#F8F8F9',
+              dark: '#180F33',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            heading: ['Outfit', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style type="text/css">
+    /* Solid body background matching brand identity */
+    body {
+      background: #4E31A0;
+    }
+
+    /* Glassmorphism cards styled specifically to blend on top of brand violet background */
+    .glass-card {
+      background: rgba(24, 15, 51, 0.55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(177, 174, 189, 0.25);
+    }
+
+    .glass-card-hover {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .glass-card-hover:hover {
+      background: rgba(24, 15, 51, 0.70);
+      border-color: rgba(177, 174, 189, 0.45);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px -6px rgba(24, 15, 51, 0.5);
+    }
+
+    /* Custom Scrollbar for list scroll */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(78, 49, 160, 0.10);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(177, 174, 189, 0.35);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(177, 174, 189, 0.55);
+    }
+
+    /* Pulsing live dot */
+    .live-dot {
+      background-color: #ef4444;
+      box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+      animation: pulse-live 1.5s infinite;
+    }
+
+    @keyframes pulse-live {
+      0% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+      }
+      70% {
+        transform: scale(1);
+        box-shadow: 0 0 0 5px rgba(239, 68, 68, 0);
+      }
+      100% {
+        transform: scale(0.95);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+      }
+    }
+  </style>
+</head>
+<body class="text-brand-snow font-sans min-h-screen selection:bg-brand-indigo selection:text-white overflow-x-hidden">
+
+  <!-- Main Container (Straight corners and background color merge) -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 bg-brand-indigo rounded-none mt-0 pt-4">
+
+    <!-- Header -->
+    <header class="py-3 mb-6 glass-card border-b border-white/5 rounded-2xl mt-4 px-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-xl">
+      <div class="flex items-center gap-3">
+        <!-- Logo -->
+        <img src="logo.svg" alt="Miravos País Logo" class="h-12 w-8 object-contain">
+        <div class="flex flex-col">
+          <div class="flex items-baseline gap-0.5">
+            <span class="text-lg font-black font-heading tracking-tight text-white">Miravos</span>
+            <span class="text-lg font-black font-heading tracking-tight text-brand-bone">País</span>
+          </div>
+          <span class="text-[9px] font-bold tracking-widest text-brand-slate/75 uppercase -mt-0.5">SPORTS DATA</span>
+        </div>
+      </div>
+      
+      <!-- Right Header Actions -->
+      <div class="flex flex-wrap items-center gap-3">
+        <!-- Norteamérica 2026 Badge -->
+        <div class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] font-black tracking-widest uppercase bg-brand-bone/10 border border-brand-bone/30 text-brand-bone cursor-default">
+          <i data-lucide="globe" class="h-3.5 w-3.5"></i>
+          Norteamérica 2026
+        </div>
+        
+        <!-- Reload Button -->
+        <button onclick="app.refreshData()" class="p-1.5 rounded-lg bg-brand-dark/80 border border-brand-slate/25 text-brand-platinum hover:bg-brand-indigo hover:text-white hover:border-brand-indigo transition-all shadow-md" title="Actualizar datos">
+          <i data-lucide="refresh-cw" class="h-3.5 w-3.5"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- ==================== MAIN DASHBOARD VIEW ==================== -->
+    <main id="mainView" class="animate-fade-in block space-y-6">
+
+      <!-- 0. COUNTDOWN TIMELINE MODULE (Dynamic) -->
+      <section id="countdownSection" class="hidden">
+        <div class="relative overflow-hidden rounded-2xl border border-brand-bone/20 bg-gradient-to-r from-brand-bone/5 via-brand-indigo/35 to-brand-bone/5 p-5 text-center shadow-lg relative overflow-hidden">
+          <span class="text-[10px] font-black text-brand-bone tracking-widest uppercase block mb-3">EL MUNDIAL DE NORTEAMÉRICA 2026 INICIA EN:</span>
+          <div class="flex items-center justify-center gap-3 sm:gap-6">
+            <div class="flex flex-col items-center">
+              <span id="cdDays" class="text-2xl sm:text-3xl font-black text-white font-mono tracking-tight bg-black/40 px-3 py-1.5 rounded-lg border border-white/5 min-w-[55px] sm:min-w-[65px]">00</span>
+              <span class="text-[9px] text-brand-slate font-bold uppercase tracking-wider mt-1">Días</span>
+            </div>
+            <span class="text-zinc-650 text-xl font-bold font-mono">:</span>
+            <div class="flex flex-col items-center">
+              <span id="cdHours" class="text-2xl sm:text-3xl font-black text-white font-mono tracking-tight bg-black/40 px-3 py-1.5 rounded-lg border border-white/5 min-w-[55px] sm:min-w-[65px]">00</span>
+              <span class="text-[9px] text-brand-slate font-bold uppercase tracking-wider mt-1">Horas</span>
+            </div>
+            <span class="text-zinc-650 text-xl font-bold font-mono">:</span>
+            <div class="flex flex-col items-center">
+              <span id="cdMinutes" class="text-2xl sm:text-3xl font-black text-white font-mono tracking-tight bg-black/40 px-3 py-1.5 rounded-lg border border-white/5 min-w-[55px] sm:min-w-[65px]">00</span>
+              <span class="text-[9px] text-brand-slate font-bold uppercase tracking-wider mt-1">Minutos</span>
+            </div>
+            <span class="text-zinc-650 text-xl font-bold font-mono">:</span>
+            <div class="flex flex-col items-center">
+              <span id="cdSeconds" class="text-2xl sm:text-3xl font-black text-white font-mono tracking-tight bg-black/40 px-3 py-1.5 rounded-lg border border-white/5 min-w-[55px] sm:min-w-[65px]">00</span>
+              <span class="text-[9px] text-brand-slate font-bold uppercase tracking-wider mt-1">Segundos</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Statistics Cards (Goles y Promedio - Ubicadas abajo del countdown) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Card 1: Total de Goles -->
+        <div class="glass-card py-3 px-4 rounded-xl border border-white/5 flex items-center gap-3.5 shadow-md bg-gradient-to-br from-brand-dark/30 to-brand-indigo/10">
+          <div class="p-2.5 rounded-lg bg-brand-indigo/15 text-brand-slate border border-brand-indigo/25 shadow-inner">
+            <i data-lucide="target" class="h-5 w-5"></i>
+          </div>
+          <div>
+            <span class="text-[10px] text-brand-slate uppercase font-bold tracking-wider block">Total de Goles</span>
+            <p id="statTotalGoals" class="text-sm font-black text-brand-snow mt-0.5 font-heading">0</p>
+          </div>
+        </div>
+
+        <!-- Card 2: Promedio Goles/Partido -->
+        <div class="glass-card py-3 px-4 rounded-xl border border-white/5 flex items-center gap-3.5 shadow-md bg-gradient-to-br from-brand-dark/30 to-brand-indigo/10">
+          <div class="p-2.5 rounded-lg bg-brand-platinum/15 text-brand-platinum border border-brand-slate/25 shadow-inner">
+            <i data-lucide="activity" class="h-5 w-5"></i>
+          </div>
+          <div>
+            <span class="text-[10px] text-brand-slate uppercase font-bold tracking-wider block">Promedio Goles/Partido</span>
+            <p id="statAvgGoals" class="text-sm font-black text-brand-snow mt-0.5 font-heading">0.00</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 1. LIVE HIGHLIGHT MODULE (Dynamic) -->
+      <section id="liveModule" class="hidden">
+        <div class="relative overflow-hidden rounded-2xl border border-red-500/20 bg-gradient-to-r from-red-950/10 via-brand-dark/40 to-red-950/10 p-4 sm:p-5 backdrop-blur-md shadow-lg">
+          <!-- Background Glow -->
+          <div class="absolute -right-16 -top-16 w-32 h-32 bg-red-600/5 rounded-full blur-2xl"></div>
+          
+          <div class="flex items-center justify-between mb-4 border-b border-red-500/10 pb-2">
+            <span class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-[10px] font-black tracking-wider uppercase">
+              <span class="h-2 w-2 rounded-full live-dot shrink-0"></span>
+              EN VIVO AHORA
+            </span>
+            <span class="text-[10px] text-brand-slate font-bold uppercase tracking-wider" id="liveMatchStage">Fase de Grupos</span>
+          </div>
+
+          <div id="liveMatchesContainer" class="space-y-3">
+            <!-- Dynamically injected live matches -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Dashboard Grid Layout (Calendar & Sidebar) -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- 2. CALENDAR & FIXTURES (Left, 2 Columns wide) -->
+        <section class="lg:col-span-2 space-y-4">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-white/5 pb-2">
+            <h2 class="text-lg font-extrabold font-heading tracking-tight flex items-center gap-2 text-white">
+              <i data-lucide="calendar" class="text-brand-bone h-5 w-5"></i>
+              Próximos Partidos
+            </h2>
+            
+            <div class="flex items-center gap-3">
+              <!-- Stage filter tabs -->
+              <div class="flex gap-0.5 bg-brand-dark/95 p-0.5 rounded-lg border border-brand-slate/20 text-[10px] font-bold" id="stageTabs">
+                <button onclick="app.filterStage('all')" class="px-2.5 py-1 rounded bg-brand-indigo text-brand-snow" data-filter="all">Todos</button>
+                <button onclick="app.filterStage('live')" class="px-2.5 py-1 rounded text-brand-slate hover:text-brand-snow" data-filter="live">En Vivo</button>
+                <button onclick="app.filterStage('scheduled')" class="px-2.5 py-1 rounded text-brand-slate hover:text-brand-snow" data-filter="scheduled">Próximos</button>
+                <button onclick="app.filterStage('finalized')" class="px-2.5 py-1 rounded text-brand-slate hover:text-brand-snow" data-filter="finalized">Terminados</button>
+              </div>
+              
+              <!-- Live API Badge -->
+              <span class="flex items-center gap-1 px-2 py-0.5 rounded bg-brand-dark border border-brand-slate/20 text-brand-slate text-[9px] font-bold uppercase tracking-wider">
+                <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                En Vivo
+              </span>
+            </div>
+          </div>
+
+          <!-- Fixtures list (Compact with Max Height & Scrollbar) -->
+          <div class="max-h-[700px] overflow-y-auto pr-1 space-y-3" id="fixturesContainer">
+            <div class="glass-card p-12 rounded-2xl flex flex-col items-center justify-center text-center">
+              <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-indigo mb-3"></div>
+              <p class="text-brand-slate text-xs font-medium">Buscando cronograma del mundial...</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. TOP SCORERS & STATS SIDEBAR (Right, 1 Column wide) -->
+        <aside class="space-y-6 lg:space-y-0 lg:flex lg:flex-col lg:gap-6">
+          
+          <!-- Top Scorers Card (Candidatos Bota de Oro) -->
+          <section class="glass-card p-4 rounded-2xl shadow-xl border border-white/5 relative overflow-hidden">
+            <div class="flex items-center justify-between border-b border-white/5 pb-2 mb-3">
+              <h3 class="text-sm font-extrabold font-heading flex items-center gap-1.5 text-white">
+                <i data-lucide="award" class="text-brand-bone h-4.5 w-4.5"></i>
+                Goleadores del Mundial
+              </h3>
+              <span class="text-[9px] text-brand-slate font-bold uppercase tracking-wider">En vivo</span>
+            </div>
+            
+            <div id="scorersContainer" class="space-y-2">
+              <!-- Injected by JS -->
+            </div>
+          </section>
+
+          <!-- Special Argentina Spotlight Section -->
+          <section id="argentinaSpotlight" class="glass-card p-4 rounded-2xl border border-brand-indigo/15 bg-gradient-to-b from-brand-indigo/5 via-brand-dark/50 to-brand-dark/50 relative overflow-hidden shadow-md lg:flex-1 lg:flex lg:flex-col">
+            <!-- Glow background -->
+            <div class="absolute -left-12 -bottom-12 w-24 h-24 bg-brand-indigo/5 rounded-full blur-2xl"></div>
+            
+            <div class="flex items-center gap-2 mb-2 border-b border-white/5 pb-1.5">
+              <span id="spotlightHeaderFlag" class="shrink-0 flex items-center">
+                <!-- Populated by JS -->
+              </span>
+              <h3 class="text-xs font-bold font-heading text-sky-400 uppercase tracking-wider">Ruta de la Albiceleste</h3>
+            </div>
+            
+            <div id="argentinaMatchList" class="space-y-2 lg:flex-1 lg:overflow-y-auto lg:min-h-0 lg:pr-0.5">
+              <!-- Injected by JS -->
+            </div>
+          </section>
+
+          <!-- Quick Stats / Widget info -->
+          <section class="glass-card p-4 rounded-xl border border-brand-slate/25 text-[10px] text-brand-slate space-y-2">
+            <p class="flex justify-between"><span>Sedes totales:</span> <span class="text-brand-platinum font-semibold">16 Ciudades</span></p>
+            <p class="flex justify-between"><span>Países anfitriones:</span> <span class="text-brand-platinum font-semibold">EEUU, México, Canadá</span></p>
+            <p class="flex justify-between"><span>Equipos participantes:</span> <span class="text-brand-platinum font-semibold">48 Selecciones</span></p>
+            <p class="flex justify-between"><span>Partidos programados:</span> <span class="text-brand-platinum font-semibold">104 Encuentros</span></p>
+          </section>
+
+        </aside>
+      </div>
+
+    </main>
+
+    <!-- ==================== DETAILED MATCH VIEW ==================== -->
+    <section id="detailView" class="hidden space-y-6">
+      
+      <!-- Back Button -->
+      <div>
+        <button onclick="app.showMainView()" class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-brand-dark border border-brand-slate/20 hover:bg-brand-indigo hover:border-brand-indigo hover:text-brand-snow transition-all text-xs font-semibold shadow-md">
+          <i data-lucide="arrow-left" class="h-3.5 w-3.5"></i>
+          Volver al Calendario
+        </button>
+      </div>
+
+      <!-- Match Scoreboard Banner -->
+      <div class="glass-card rounded-2xl overflow-hidden relative border border-white/10 shadow-xl bg-gradient-to-br from-brand-dark via-brand-indigo/10 to-brand-dark">
+        <div class="relative p-6 sm:p-8 text-center flex flex-col items-center justify-center">
+          
+          <!-- Stage & Live Badge -->
+          <div class="flex items-center gap-2 mb-4" id="detailStageContainer">
+            <!-- JS updates this -->
+          </div>
+
+          <!-- Team Row -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 items-center justify-center gap-4 sm:gap-2 w-full max-w-3xl">
+            
+            <!-- Home Team -->
+            <div class="flex flex-col items-center sm:items-end gap-1.5">
+              <span id="detailHomeFlag" class="shrink-0 flex items-center cursor-pointer hover:opacity-85 transition-opacity"></span>
+              <span id="detailHomeName" class="text-lg font-black font-heading tracking-wide text-white cursor-pointer hover:text-brand-slate transition-colors">Argentina</span>
+              <span class="text-[9px] text-brand-slate/75 uppercase tracking-wider">Local</span>
+            </div>
+
+            <!-- Score / Versus -->
+            <div class="flex flex-col items-center justify-center py-3 px-5 rounded-xl bg-brand-dark/95 border border-brand-slate/20 max-w-[160px] mx-auto w-full">
+              <div class="flex items-center justify-center gap-3">
+                <span id="detailHomeScore" class="text-3xl font-black font-heading text-white font-mono">0</span>
+                <span class="text-brand-slate/70 text-lg font-bold font-heading">:</span>
+                <span id="detailAwayScore" class="text-3xl font-black font-heading text-white font-mono">0</span>
+              </div>
+              <span class="text-[9px] text-brand-slate font-bold mt-1.5 tracking-widest uppercase" id="detailMatchTime">90'</span>
+            </div>
+
+            <!-- Away Team -->
+            <div class="flex flex-col items-center sm:items-start gap-1.5">
+              <span id="detailAwayFlag" class="shrink-0 flex items-center cursor-pointer hover:opacity-85 transition-opacity"></span>
+              <span id="detailAwayName" class="text-lg font-black font-heading tracking-wide text-white cursor-pointer hover:text-brand-slate transition-colors">Francia</span>
+              <span class="text-[9px] text-brand-slate/75 uppercase tracking-wider">Visitante</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Detail Grid (Analytics Cards on Left, Event Timeline on Right) -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Analytical Metrics (Left, 1 Column wide) -->
+        <div class="space-y-4">
+          <h3 class="text-base font-extrabold font-heading tracking-tight flex items-center gap-1.5 text-white">
+            <i data-lucide="bar-chart-2" class="text-brand-slate h-4.5 w-4.5"></i>
+            Datos del Partido
+          </h3>
+
+          <!-- Elevation/Altitude card -->
+          <div class="glass-card p-3 rounded-xl flex items-center gap-3 border border-brand-slate/15">
+            <div class="p-2 rounded-lg bg-brand-indigo/15 text-brand-slate border border-brand-indigo/25">
+              <i data-lucide="mountain" class="h-5 w-5"></i>
+            </div>
+            <div>
+              <span class="text-[9px] text-brand-slate uppercase font-bold tracking-wider">Altitud del Estadio</span>
+              <p id="detailElevation" class="text-sm font-bold text-brand-snow mt-0.5">2,240 metros</p>
+            </div>
+          </div>
+
+          <!-- Weather card -->
+          <div class="glass-card p-3 rounded-xl flex items-center gap-3 border border-brand-slate/15">
+            <div class="p-2 rounded-lg bg-brand-bone/15 text-brand-bone border border-brand-bone/25">
+              <i data-lucide="cloud-sun" class="h-5 w-5"></i>
+            </div>
+            <div>
+              <span class="text-[9px] text-brand-slate uppercase font-bold tracking-wider">Clima / Temperatura</span>
+              <p id="detailWeather" class="text-sm font-bold text-brand-snow mt-0.5">24°C, Templado</p>
+            </div>
+          </div>
+
+          <!-- Stadium Name card -->
+          <div class="glass-card p-3 rounded-xl flex items-center gap-3 border border-brand-slate/15">
+            <div class="p-2 rounded-lg bg-brand-indigo/15 text-brand-slate border border-brand-indigo/25">
+              <i data-lucide="map-pin" class="h-5 w-5"></i>
+            </div>
+            <div class="overflow-hidden">
+              <span class="text-[9px] text-brand-slate uppercase font-bold tracking-wider">Estadio y Sede</span>
+              <p id="detailStadiumName" class="text-xs font-bold text-brand-snow mt-0.5 truncate">Estadio Azteca, CDMX</p>
+            </div>
+          </div>
+
+          <!-- Referee card -->
+          <div class="glass-card p-3 rounded-xl flex items-center gap-3 border border-brand-slate/15">
+            <div class="p-2 rounded-lg bg-brand-bone/15 text-brand-bone border border-brand-bone/25">
+              <i data-lucide="user" class="h-5 w-5"></i>
+            </div>
+            <div>
+              <span class="text-[9px] text-brand-slate uppercase font-bold tracking-wider">Árbitro Principal</span>
+              <p id="detailReferee" class="text-sm font-bold text-brand-snow mt-0.5">Wilmar Roldán</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Incidences Timeline (Right, 2 Columns wide) -->
+        <div class="lg:col-span-2 space-y-4">
+          <h3 class="text-base font-extrabold font-heading tracking-tight flex items-center gap-1.5 text-white">
+            <i data-lucide="clock" class="text-brand-slate h-4.5 w-4.5"></i>
+            Línea de Tiempo del Partido
+          </h3>
+
+          <!-- Timeline Container -->
+          <div class="glass-card p-5 rounded-2xl min-h-[250px] relative">
+            <div class="absolute left-6 sm:left-1/2 top-6 bottom-6 w-0.5 bg-brand-slate/25" id="timelineBar"></div>
+            
+            <div id="timelineContainer" class="relative space-y-6">
+              <!-- Dynamically injected events -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+  </div>
+
+  <!-- Info Detail Modal (Teams & Players) -->
+  <div id="infoModal" onclick="if(event.target===this)app.closeModal()" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+    <div class="glass-card w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl border border-white/10 flex flex-col max-h-[95vh] sm:max-h-[90vh] transform scale-95 transition-all duration-300" id="infoModalCard">
+      <!-- Modal Header -->
+      <div class="px-5 py-4 border-b border-white/5 flex items-center justify-between bg-brand-dark/60">
+        <h3 id="infoModalTitle" class="text-sm font-black font-heading text-white flex items-center gap-2">Detalles</h3>
+        <button onclick="app.closeModal()" class="p-1.5 rounded-lg bg-brand-indigo/20 hover:bg-brand-indigo text-brand-slate hover:text-brand-white transition-colors" title="Cerrar">
+          <i data-lucide="x" class="h-4.5 w-4.5"></i>
+        </button>
+      </div>
+      <!-- Modal Content (Scrollable) -->
+      <div id="infoModalContent" class="p-5 overflow-y-auto space-y-4 text-xs text-brand-platinum">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Match Detail Modal -->
+  <div id="matchModal" onclick="if(event.target===this)app.closeMatchModal()" class="fixed inset-0 z-40 flex items-center justify-center p-3 sm:p-5 bg-black/88 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300">
+    <div class="glass-card w-full max-w-3xl rounded-2xl overflow-hidden shadow-2xl border border-white/10 flex flex-col max-h-[96vh] transform scale-95 transition-all duration-300" id="matchModalCard">
+      <!-- Modal Header -->
+      <div class="px-5 py-3.5 border-b border-white/5 flex items-center justify-between bg-brand-dark/70 shrink-0">
+        <h3 id="matchModalTitle" class="text-xs font-black font-heading text-brand-slate flex items-center gap-2 uppercase tracking-widest">Partido</h3>
+        <button onclick="app.closeMatchModal()" class="p-1.5 rounded-lg bg-brand-indigo/20 hover:bg-brand-indigo text-brand-slate hover:text-white transition-colors" title="Cerrar">
+          <i data-lucide="x" class="h-4 w-4"></i>
+        </button>
+      </div>
+      <!-- Scrollable content -->
+      <div id="matchModalContent" class="p-4 sm:p-5 overflow-y-auto space-y-4 text-xs text-brand-platinum">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Notification Toast -->
+  <div id="liveAlertToast" class="fixed bottom-6 right-6 z-50 glass-card border border-red-500/30 p-4 rounded-xl shadow-2xl flex items-center gap-4 transition-all duration-300 opacity-0 translate-y-8 pointer-events-none bg-gradient-to-r from-red-950/25 to-brand-dark">
+    <span class="h-2 w-2 rounded-full live-dot"></span>
+    <div class="text-[11px]">
+      <span class="font-bold text-red-400 block tracking-wider uppercase text-[9px]">¡GOL EN VIVO!</span>
+      <p class="font-semibold text-brand-snow" id="liveAlertText">Gol en vivo en el partido</p>
+    </div>
+    <button onclick="document.getElementById('liveAlertToast').classList.add('opacity-0', 'translate-y-8', 'pointer-events-none')" class="text-brand-slate hover:text-brand-snow">
+      <i data-lucide="x" class="h-4 w-4"></i>
+    </button>
+  </div>
+
+  <!-- FOOTER -->
+
+  <!-- Standalone Main Script (merged HTML, CSS, JS) -->
+  <script>
+    // -------------------------------------------------------------
+    // Core JavaScript Logic: Mini-Site Mundial 2026 (Miravos País)
+    // -------------------------------------------------------------
+
+    // Team Metadata mapping dictionary to resolve flags and Spanish names dynamically
+    const teamMetaData = {
+      // Concacaf / Norteamérica
+      "Mexico": { flag_code: "mx", code: "MEX", nameEs: "México" },
+      "México": { flag_code: "mx", code: "MEX", nameEs: "México" },
+      "Canada": { flag_code: "ca", code: "CAN", nameEs: "Canadá" },
+      "Canadá": { flag_code: "ca", code: "CAN", nameEs: "Canadá" },
+      "United States": { flag_code: "us", code: "USA", nameEs: "Estados Unidos" },
+      "Estados Unidos": { flag_code: "us", code: "USA", nameEs: "Estados Unidos" },
+      "EE.UU.": { flag_code: "us", code: "USA", nameEs: "Estados Unidos" },
+      "USA": { flag_code: "us", code: "USA", nameEs: "Estados Unidos" },
+      "Costa Rica": { flag_code: "cr", code: "CRC", nameEs: "Costa Rica" },
+      "Panama": { flag_code: "pa", code: "PAN", nameEs: "Panamá" },
+      "Panamá": { flag_code: "pa", code: "PAN", nameEs: "Panamá" },
+      "Honduras": { flag_code: "hn", code: "HON", nameEs: "Honduras" },
+      "El Salvador": { flag_code: "sv", code: "SLV", nameEs: "El Salvador" },
+      "Jamaica": { flag_code: "jm", code: "JAM", nameEs: "Jamaica" },
+      "Haiti": { flag_code: "ht", code: "HAI", nameEs: "Haití" },
+      "Haití": { flag_code: "ht", code: "HAI", nameEs: "Haití" },
+      "Trinidad and Tobago": { flag_code: "tt", code: "TRI", nameEs: "Trinidad y Tobago" },
+      "Guatemala": { flag_code: "gt", code: "GUA", nameEs: "Guatemala" },
+
+      // CONMEBOL / Sudamérica
+      "Argentina": { flag_code: "ar", code: "ARG", nameEs: "Argentina" },
+      "Brazil": { flag_code: "br", code: "BRA", nameEs: "Brasil" },
+      "Brasil": { flag_code: "br", code: "BRA", nameEs: "Brasil" },
+      "Uruguay": { flag_code: "uy", code: "URU", nameEs: "Uruguay" },
+      "Colombia": { flag_code: "co", code: "COL", nameEs: "Colombia" },
+      "Ecuador": { flag_code: "ec", code: "ECU", nameEs: "Ecuador" },
+      "Peru": { flag_code: "pe", code: "PER", nameEs: "Perú" },
+      "Perú": { flag_code: "pe", code: "PER", nameEs: "Perú" },
+      "Chile": { flag_code: "cl", code: "CHI", nameEs: "Chile" },
+      "Paraguay": { flag_code: "py", code: "PAR", nameEs: "Paraguay" },
+      "Venezuela": { flag_code: "ve", code: "VEN", nameEs: "Venezuela" },
+      "Bolivia": { flag_code: "bo", code: "BOL", nameEs: "Bolivia" },
+
+      // UEFA / Europa
+      "France": { flag_code: "fr", code: "FRA", nameEs: "Francia" },
+      "Francia": { flag_code: "fr", code: "FRA", nameEs: "Francia" },
+      "England": { flag_code: "gb-eng", code: "ENG", nameEs: "Inglaterra" },
+      "Inglaterra": { flag_code: "gb-eng", code: "ENG", nameEs: "Inglaterra" },
+      "Germany": { flag_code: "de", code: "GER", nameEs: "Alemania" },
+      "Alemania": { flag_code: "de", code: "GER", nameEs: "Alemania" },
+      "Spain": { flag_code: "es", code: "ESP", nameEs: "España" },
+      "España": { flag_code: "es", code: "ESP", nameEs: "España" },
+      "Italy": { flag_code: "it", code: "ITA", nameEs: "Italia" },
+      "Italia": { flag_code: "it", code: "ITA", nameEs: "Italia" },
+      "Portugal": { flag_code: "pt", code: "POR", nameEs: "Portugal" },
+      "Netherlands": { flag_code: "nl", code: "NED", nameEs: "Países Bajos" },
+      "Países Bajos": { flag_code: "nl", code: "NED", nameEs: "Países Bajos" },
+      "Belgium": { flag_code: "be", code: "BEL", nameEs: "Bélgica" },
+      "Bélgica": { flag_code: "be", code: "BEL", nameEs: "Bélgica" },
+      "Croatia": { flag_code: "hr", code: "CRO", nameEs: "Croacia" },
+      "Croacia": { flag_code: "hr", code: "CRO", nameEs: "Croacia" },
+      "Switzerland": { flag_code: "ch", code: "SUI", nameEs: "Suiza" },
+      "Suiza": { flag_code: "ch", code: "SUI", nameEs: "Suiza" },
+      "Poland": { flag_code: "pl", code: "POL", nameEs: "Polonia" },
+      "Polonia": { flag_code: "pl", code: "POL", nameEs: "Polonia" },
+      "Wales": { flag_code: "gb-wls", code: "WAL", nameEs: "Gales" },
+      "Gales": { flag_code: "gb-wls", code: "WAL", nameEs: "Gales" },
+      "Denmark": { flag_code: "dk", code: "DEN", nameEs: "Dinamarca" },
+      "Dinamarca": { flag_code: "dk", code: "DEN", nameEs: "Dinamarca" },
+      "Sweden": { flag_code: "se", code: "SWE", nameEs: "Suecia" },
+      "Suecia": { flag_code: "se", code: "SWE", nameEs: "Suecia" },
+      "Austria": { flag_code: "at", code: "AUT", nameEs: "Austria" },
+      "Turkey": { flag_code: "tr", code: "TUR", nameEs: "Turquía" },
+      "Türkiye": { flag_code: "tr", code: "TUR", nameEs: "Turquía" },
+      "Turquía": { flag_code: "tr", code: "TUR", nameEs: "Turquía" },
+      "Hungary": { flag_code: "hu", code: "HUN", nameEs: "Hungría" },
+      "Hungría": { flag_code: "hu", code: "HUN", nameEs: "Hungría" },
+      "Scotland": { flag_code: "gb-sct", code: "SCO", nameEs: "Escocia" },
+      "Escocia": { flag_code: "gb-sct", code: "SCO", nameEs: "Escocia" },
+      "Ukraine": { flag_code: "ua", code: "UKR", nameEs: "Ucrania" },
+      "Ucrania": { flag_code: "ua", code: "UKR", nameEs: "Ucrania" },
+      "Serbia": { flag_code: "rs", code: "SRB", nameEs: "Serbia" },
+      "Romania": { flag_code: "ro", code: "ROU", nameEs: "Rumania" },
+      "Rumania": { flag_code: "ro", code: "ROU", nameEs: "Rumania" },
+      "Czech Republic": { flag_code: "cz", code: "CZE", nameEs: "República Checa" },
+      "Czechia": { flag_code: "cz", code: "CZE", nameEs: "República Checa" },
+      "República Checa": { flag_code: "cz", code: "CZE", nameEs: "República Checa" },
+      "Slovakia": { flag_code: "sk", code: "SVK", nameEs: "Eslovaquia" },
+      "Eslovaquia": { flag_code: "sk", code: "SVK", nameEs: "Eslovaquia" },
+      "Slovenia": { flag_code: "si", code: "SVN", nameEs: "Eslovenia" },
+      "Eslovenia": { flag_code: "si", code: "SVN", nameEs: "Eslovenia" },
+      "Greece": { flag_code: "gr", code: "GRE", nameEs: "Grecia" },
+      "Grecia": { flag_code: "gr", code: "GRE", nameEs: "Grecia" },
+      "Georgia": { flag_code: "ge", code: "GEO", nameEs: "Georgia" },
+      "Albania": { flag_code: "al", code: "ALB", nameEs: "Albania" },
+
+      // CAF / África
+      "Morocco": { flag_code: "ma", code: "MAR", nameEs: "Marruecos" },
+      "Marruecos": { flag_code: "ma", code: "MAR", nameEs: "Marruecos" },
+      "Cameroon": { flag_code: "cm", code: "CMR", nameEs: "Camerún" },
+      "Camerún": { flag_code: "cm", code: "CMR", nameEs: "Camerún" },
+      "Senegal": { flag_code: "sn", code: "SEN", nameEs: "Senegal" },
+      "Egypt": { flag_code: "eg", code: "EGY", nameEs: "Egipto" },
+      "Egipto": { flag_code: "eg", code: "EGY", nameEs: "Egipto" },
+      "Nigeria": { flag_code: "ng", code: "NGA", nameEs: "Nigeria" },
+      "Algeria": { flag_code: "dz", code: "ALG", nameEs: "Argelia" },
+      "Argelia": { flag_code: "dz", code: "ALG", nameEs: "Argelia" },
+      "Ghana": { flag_code: "gh", code: "GHA", nameEs: "Ghana" },
+      "Ivory Coast": { flag_code: "ci", code: "CIV", nameEs: "Costa de Marfil" },
+      "Côte d'Ivoire": { flag_code: "ci", code: "CIV", nameEs: "Costa de Marfil" },
+      "Costa de Marfil": { flag_code: "ci", code: "CIV", nameEs: "Costa de Marfil" },
+      "Mali": { flag_code: "ml", code: "MLI", nameEs: "Malí" },
+      "Malí": { flag_code: "ml", code: "MLI", nameEs: "Malí" },
+      "South Africa": { flag_code: "za", code: "RSA", nameEs: "Sudáfrica" },
+      "Sudáfrica": { flag_code: "za", code: "RSA", nameEs: "Sudáfrica" },
+      "Tunisia": { flag_code: "tn", code: "TUN", nameEs: "Túnez" },
+      "Túnez": { flag_code: "tn", code: "TUN", nameEs: "Túnez" },
+
+      // AFC / Asia y OFC / Oceanía
+      "Saudi Arabia": { flag_code: "sa", code: "KSA", nameEs: "Arabia Saudita" },
+      "Arabia Saudita": { flag_code: "sa", code: "KSA", nameEs: "Arabia Saudita" },
+      "Arabia S.": { flag_code: "sa", code: "KSA", nameEs: "Arabia Saudita" },
+      "Japan": { flag_code: "jp", code: "JPN", nameEs: "Japón" },
+      "Japón": { flag_code: "jp", code: "JPN", nameEs: "Japón" },
+      "South Korea": { flag_code: "kr", code: "KOR", nameEs: "Corea del Sur" },
+      "Corea del Sur": { flag_code: "kr", code: "KOR", nameEs: "Corea del Sur" },
+      "Korea Republic": { flag_code: "kr", code: "KOR", nameEs: "Corea del Sur" },
+      "Australia": { flag_code: "au", code: "AUS", nameEs: "Australia" },
+      "Iran": { flag_code: "ir", code: "IRN", nameEs: "Irán" },
+      "Irán": { flag_code: "ir", code: "IRN", nameEs: "Irán" },
+      "Iraq": { flag_code: "iq", code: "IRQ", nameEs: "Irak" },
+      "Irak": { flag_code: "iq", code: "IRQ", nameEs: "Irak" },
+      "Qatar": { flag_code: "qa", code: "QAT", nameEs: "Qatar" },
+      "Catar": { flag_code: "qa", code: "QAT", nameEs: "Qatar" },
+      "United Arab Emirates": { flag_code: "ae", code: "UAE", nameEs: "Emiratos Árabes" },
+      "UAE": { flag_code: "ae", code: "UAE", nameEs: "Emiratos Árabes" },
+      "Emiratos Árabes Unidos": { flag_code: "ae", code: "UAE", nameEs: "Emiratos Árabes" },
+      "China": { flag_code: "cn", code: "CHN", nameEs: "China" },
+      "Uzbekistan": { flag_code: "uz", code: "UZB", nameEs: "Uzbekistán" },
+      "Uzbekistán": { flag_code: "uz", code: "UZB", nameEs: "Uzbekistán" },
+      "Oman": { flag_code: "om", code: "OMA", nameEs: "Omán" },
+      "Omán": { flag_code: "om", code: "OMA", nameEs: "Omán" },
+      "Jordan": { flag_code: "jo", code: "JOR", nameEs: "Jordania" },
+      "Jordania": { flag_code: "jo", code: "JOR", nameEs: "Jordania" },
+      "New Zealand": { flag_code: "nz", code: "NZL", nameEs: "Nueva Zelanda" },
+      "Nueva Zelanda": { flag_code: "nz", code: "NZL", nameEs: "Nueva Zelanda" },
+
+      // Países adicionales del fixture 2026
+      "Norway": { flag_code: "no", code: "NOR", nameEs: "Noruega" },
+      "Noruega": { flag_code: "no", code: "NOR", nameEs: "Noruega" },
+      "Bosnia and Herzegovina": { flag_code: "ba", code: "BIH", nameEs: "Bosnia y Herzegovina" },
+      "Bosnia y Herzegovina": { flag_code: "ba", code: "BIH", nameEs: "Bosnia y Herzegovina" },
+      "Bosnia": { flag_code: "ba", code: "BIH", nameEs: "Bosnia y Herzegovina" },
+      "Cabo Verde": { flag_code: "cv", code: "CPV", nameEs: "Cabo Verde" },
+      "Cape Verde": { flag_code: "cv", code: "CPV", nameEs: "Cabo Verde" },
+      "Curazao": { flag_code: "cw", code: "CUW", nameEs: "Curazao" },
+      "Curaçao": { flag_code: "cw", code: "CUW", nameEs: "Curazao" },
+      "IR Iran": { flag_code: "ir", code: "IRN", nameEs: "Irán" },
+      "Korea Republic": { flag_code: "kr", code: "KOR", nameEs: "Corea del Sur" },
+      "Czechia": { flag_code: "cz", code: "CZE", nameEs: "República Checa" }
+    };
+
+    function getTeamMeta(teamName) {
+      if (!teamName) return { name: "Por definir", flag_code: "un", code: "TBD" };
+      
+      const cleanName = teamName.trim();
+      
+      // 1. Intento de coincidencia directa (clave exacta)
+      let meta = teamMetaData[cleanName] || null;
+      
+      if (!meta) {
+        // 2. Intento de coincidencia insensible a mayúsculas/tildes
+        const lowerClean = cleanName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        for (const [key, value] of Object.entries(teamMetaData)) {
+          const keyLower = key.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+          if (keyLower === lowerClean) {
+            meta = value;
+            break;
+          }
+        }
+      }
+      
+      if (meta) {
+        return {
+          name: meta.nameEs,
+          flag_code: meta.flag_code,
+          code: meta.code
+        };
+      }
+      
+      return {
+        name: teamName,
+        flag_code: "un",
+        code: teamName.slice(0, 3).toUpperCase()
+      };
+    }
+
+    // Renders an image using FlagCDN to bypass Windows emoji rendering limitations
+    function getFlagImgHTML(flagCode, size = "w40", className = "") {
+      if (!flagCode || flagCode === "un" || flagCode === "🏳️") {
+        return ``;
+      }
+      const code = flagCode.toLowerCase();
+      const defaultClass = size === "w80" ? "h-6 w-9 rounded shadow border border-white/15" : "h-3.5 w-5 rounded-sm shadow-sm border border-white/10";
+      const finalClass = className || defaultClass;
+      // onerror: replace with small code badge as graceful fallback instead of removing
+      return `<img src="https://flagcdn.com/${size}/${code}.png" onerror="this.outerHTML='<span class=\'text-[8px] text-brand-slate/50 font-mono px-0.5 border border-brand-slate/20 rounded\'>${code.toUpperCase()}</span>'" class="${finalClass} object-cover inline-block shrink-0" alt="${code.toUpperCase()}">`;
+    }
+
+    // Mock Data for local/offline testing and design fallback
+    // Partidos reales: Zafronix WC Explorer /wc-explorer/matches/?year=2026
+    const zafronixMockData = {
+      matches: [
+        // Jun 11 — Partido inaugural
+        { id: "2026-001", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo A",
+          date: "2026-06-11T19:00:00Z",
+          home_team: { name: "Mexico", flag_code: "mx", code: "MEX" },
+          away_team: { name: "South Africa", flag_code: "za", code: "RSA" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Estadio Ciudad de México", city: "Ciudad de México", elevationM: 2240 },
+          weather: { tempC: 22, condition: "Despejado" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        // Jun 12
+        { id: "2026-002", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo A",
+          date: "2026-06-12T20:00:00Z",
+          home_team: { name: "Korea Republic", flag_code: "kr", code: "KOR" },
+          away_team: { name: "Czechia", flag_code: "cz", code: "CZE" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Estadio Guadalajara", city: "Zapopan", elevationM: 1566 },
+          weather: { tempC: 25, condition: "Soleado" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        { id: "2026-003", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo B",
+          date: "2026-06-12T23:00:00Z",
+          home_team: { name: "Canada", flag_code: "ca", code: "CAN" },
+          away_team: { name: "Bosnia and Herzegovina", flag_code: "ba", code: "BIH" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Toronto Stadium", city: "Toronto", elevationM: 77 },
+          weather: { tempC: 19, condition: "Templado" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        // Jun 13
+        { id: "2026-007", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo C",
+          date: "2026-06-13T19:00:00Z",
+          home_team: { name: "Brazil", flag_code: "br", code: "BRA" },
+          away_team: { name: "Morocco", flag_code: "ma", code: "MAR" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "MetLife Stadium", city: "East Rutherford", elevationM: 7 },
+          weather: { tempC: 20, condition: "Nublado" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        { id: "2026-008", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo B",
+          date: "2026-06-13T23:00:00Z",
+          home_team: { name: "Qatar", flag_code: "qa", code: "QAT" },
+          away_team: { name: "Switzerland", flag_code: "ch", code: "SUI" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Estadio San Francisco", city: "Santa Clara", elevationM: 20 },
+          weather: { tempC: 17, condition: "Fresco" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        { id: "2026-004", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo D",
+          date: "2026-06-13T22:00:00Z",
+          home_team: { name: "United States", flag_code: "us", code: "USA" },
+          away_team: { name: "Paraguay", flag_code: "py", code: "PAR" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "SoFi Stadium", city: "Inglewood", elevationM: 32 },
+          weather: { tempC: 22, condition: "Despejado" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        // Jun 14
+        { id: "2026-005", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo C",
+          date: "2026-06-14T20:00:00Z",
+          home_team: { name: "Haiti", flag_code: "ht", code: "HAI" },
+          away_team: { name: "Scotland", flag_code: "gb-sct", code: "SCO" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Gillette Stadium", city: "Foxborough", elevationM: 20 },
+          weather: { tempC: 18, condition: "Nublado" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        { id: "2026-006", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo D",
+          date: "2026-06-14T23:00:00Z",
+          home_team: { name: "Australia", flag_code: "au", code: "AUS" },
+          away_team: { name: "Türkiye", flag_code: "tr", code: "TUR" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "BC Place", city: "Vancouver", elevationM: 4 },
+          weather: { tempC: 16, condition: "Lluvia leve" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        { id: "2026-009", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo E",
+          date: "2026-06-14T20:00:00Z",
+          home_team: { name: "Ivory Coast", flag_code: "ci", code: "CIV" },
+          away_team: { name: "Ecuador", flag_code: "ec", code: "ECU" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Estadio Philadelphia", city: "Philadelphia", elevationM: 15 },
+          weather: { tempC: 21, condition: "Templado" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        { id: "2026-010", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo E",
+          date: "2026-06-14T23:30:00Z",
+          home_team: { name: "Germany", flag_code: "de", code: "GER" },
+          away_team: { name: "Curazao", flag_code: "cw", code: "CUW" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "NRG Stadium", city: "Houston", elevationM: 15 },
+          weather: { tempC: 30, condition: "Caluroso" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        { id: "2026-011", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo F",
+          date: "2026-06-14T22:00:00Z",
+          home_team: { name: "Netherlands", flag_code: "nl", code: "NED" },
+          away_team: { name: "Japan", flag_code: "jp", code: "JPN" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "AT&T Stadium", city: "Arlington", elevationM: 182 },
+          weather: { tempC: 32, condition: "Muy caluroso" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        // Jun 15
+        { id: "2026-012", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo F",
+          date: "2026-06-15T19:00:00Z",
+          home_team: { name: "Sweden", flag_code: "se", code: "SWE" },
+          away_team: { name: "Tunisia", flag_code: "tn", code: "TUN" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Estadio Monterrey", city: "Guadalupe", elevationM: 538 },
+          weather: { tempC: 28, condition: "Soleado" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        { id: "2026-013", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo H",
+          date: "2026-06-15T22:00:00Z",
+          home_team: { name: "Saudi Arabia", flag_code: "sa", code: "KSA" },
+          away_team: { name: "Uruguay", flag_code: "uy", code: "URU" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Hard Rock Stadium", city: "Miami Gardens", elevationM: 4 },
+          weather: { tempC: 29, condition: "Húmedo" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        { id: "2026-014", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo H",
+          date: "2026-06-15T19:00:00Z",
+          home_team: { name: "Spain", flag_code: "es", code: "ESP" },
+          away_team: { name: "Cabo Verde", flag_code: "cv", code: "CPV" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Estadio Atlanta", city: "Atlanta", elevationM: 320 },
+          weather: { tempC: 27, condition: "Nublado" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        { id: "2026-016", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo G",
+          date: "2026-06-15T22:00:00Z",
+          home_team: { name: "Belgium", flag_code: "be", code: "BEL" },
+          away_team: { name: "Egypt", flag_code: "eg", code: "EGY" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Lumen Field", city: "Seattle", elevationM: 10 },
+          weather: { tempC: 18, condition: "Fresco" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        // Jun 16
+        { id: "2026-015", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo G",
+          date: "2026-06-16T19:00:00Z",
+          home_team: { name: "Iran", flag_code: "ir", code: "IRN" },
+          away_team: { name: "New Zealand", flag_code: "nz", code: "NZL" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "SoFi Stadium", city: "Inglewood", elevationM: 32 },
+          weather: { tempC: 23, condition: "Despejado" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        { id: "2026-017", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo I",
+          date: "2026-06-16T22:00:00Z",
+          home_team: { name: "France", flag_code: "fr", code: "FRA" },
+          away_team: { name: "Senegal", flag_code: "sn", code: "SEN" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "MetLife Stadium", city: "East Rutherford", elevationM: 7 },
+          weather: { tempC: 20, condition: "Nublado" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        { id: "2026-018", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo I",
+          date: "2026-06-16T22:00:00Z",
+          home_team: { name: "Iraq", flag_code: "iq", code: "IRQ" },
+          away_team: { name: "Norway", flag_code: "no", code: "NOR" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Gillette Stadium", city: "Foxborough", elevationM: 20 },
+          weather: { tempC: 19, condition: "Fresco" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        // Jun 17 — Argentina
+        { id: "2026-019", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo J",
+          date: "2026-06-17T22:00:00Z",
+          home_team: { name: "Argentina", flag_code: "ar", code: "ARG" },
+          away_team: { name: "Algeria", flag_code: "dz", code: "ALG" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Estadio Kansas City", city: "Kansas City", elevationM: 270 },
+          weather: { tempC: 26, condition: "Despejado" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        { id: "2026-020", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo J",
+          date: "2026-06-17T19:00:00Z",
+          home_team: { name: "Austria", flag_code: "at", code: "AUT" },
+          away_team: { name: "Jordan", flag_code: "jo", code: "JOR" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Estadio San Francisco", city: "Santa Clara", elevationM: 20 },
+          weather: { tempC: 18, condition: "Templado" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        { id: "2026-021", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo L",
+          date: "2026-06-17T23:00:00Z",
+          home_team: { name: "Ghana", flag_code: "gh", code: "GHA" },
+          away_team: { name: "Panama", flag_code: "pa", code: "PAN" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Toronto Stadium", city: "Toronto", elevationM: 77 },
+          weather: { tempC: 20, condition: "Nublado" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        { id: "2026-022", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo L",
+          date: "2026-06-17T19:00:00Z",
+          home_team: { name: "England", flag_code: "gb-eng", code: "ENG" },
+          away_team: { name: "Croatia", flag_code: "hr", code: "CRO" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Hard Rock Stadium", city: "Miami Gardens", elevationM: 4 },
+          weather: { tempC: 28, condition: "Húmedo" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        // Jun 18
+        { id: "2026-023", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo K",
+          date: "2026-06-18T22:00:00Z",
+          home_team: { name: "Portugal", flag_code: "pt", code: "POR" },
+          away_team: { name: "Colombia", flag_code: "co", code: "COL" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Estadio Kansas City", city: "Kansas City", elevationM: 270 },
+          weather: { tempC: 25, condition: "Despejado" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        { id: "2026-024", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo K",
+          date: "2026-06-18T19:00:00Z",
+          home_team: { name: "Venezuela", flag_code: "ve", code: "VEN" },
+          away_team: { name: "China", flag_code: "cn", code: "CHN" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "AT&T Stadium", city: "Arlington", elevationM: 182 },
+          weather: { tempC: 30, condition: "Caluroso" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        { id: "2026-025", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo I",
+          date: "2026-06-18T22:00:00Z",
+          home_team: { name: "Italy", flag_code: "it", code: "ITA" },
+          away_team: { name: "Honduras", flag_code: "hn", code: "HON" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Estadio Monterrey", city: "Guadalupe", elevationM: 538 },
+          weather: { tempC: 27, condition: "Soleado" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        // Jun 22 — Argentina Jornada 2 (Grupo J)
+        { id: "2026-026", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo J",
+          date: "2026-06-22T22:00:00Z",
+          home_team: { name: "Argentina", flag_code: "ar", code: "ARG" },
+          away_team: { name: "Jordan", flag_code: "jo", code: "JOR" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "MetLife Stadium", city: "East Rutherford", elevationM: 7 },
+          weather: { tempC: 22, condition: "Nublado" },
+          referee: { name: "Por designar", country: "" }, goals: [] },
+        // Jun 26 — Argentina Jornada 3 (Grupo J)
+        { id: "2026-027", status: "scheduled", stageNormalized: "Fase de Grupos - Grupo J",
+          date: "2026-06-26T22:00:00Z",
+          home_team: { name: "Austria", flag_code: "at", code: "AUT" },
+          away_team: { name: "Argentina", flag_code: "ar", code: "ARG" },
+          home_score: 0, away_score: 0, time_minutes: 0,
+          stadium: { name: "Allegiant Stadium", city: "Las Vegas", elevationM: 610 },
+          weather: { tempC: 35, condition: "Muy caluroso" },
+          referee: { name: "Por designar", country: "" }, goals: [] }
+      ],
+      scorers: []
+    };
+
+    // Enriched Database for Players (Ballo d'Or / Bota de Oro Candidates)
+    const playerDb = {
+      "Lionel Messi": {
+        name: "Lionel Messi",
+        team: "Argentina",
+        flag_code: "ar",
+        position: "Delantero / Mediapunta",
+        club: "Inter Miami CF (EE.UU.)",
+        age: 38,
+        stats: { matches: 180, goals: 106, assists: 56 },
+        bio: "El legendario capitán de la Albiceleste liderará la defensa del título en la Copa del Mundo 2026. Con su visión de juego intacta y su excelsa pegada, sigue siendo la pieza angular del esquema de Lionel Scaloni."
+      },
+      "Kylian Mbappé": {
+        name: "Kylian Mbappé",
+        team: "Francia",
+        flag_code: "fr",
+        position: "Extremo Izquierdo / Delantero",
+        club: "Real Madrid (España)",
+        age: 27,
+        stats: { matches: 84, goals: 48, assists: 30 },
+        bio: "El desequilibrante delantero estrella de la selección francesa. Campeón mundial en 2018 y bota de oro en Qatar 2022. Su velocidad, técnica y contundencia lo posicionan como el gran rival a vencer para el premio al máximo goleador."
+      },
+      "Vinícius Jr": {
+        name: "Vinícius Jr",
+        team: "Brasil",
+        flag_code: "br",
+        position: "Extremo Izquierdo",
+        club: "Real Madrid (España)",
+        age: 25,
+        stats: { matches: 35, goals: 5, assists: 6 },
+        bio: "Eléctrico regateador de la 'Canarinha'. Líder en ataque de la nueva generación brasileña, buscará llevar la sexta estrella a Brasil con su capacidad de desborde y su mejorada capacidad goleadora."
+      },
+      "Vinícius Júnior": {
+        name: "Vinícius Júnior",
+        team: "Brasil",
+        flag_code: "br",
+        position: "Extremo Izquierdo",
+        club: "Real Madrid (España)",
+        age: 25,
+        stats: { matches: 35, goals: 5, assists: 6 },
+        bio: "Eléctrico regateador de la 'Canarinha'. Líder en ataque de la nueva generación brasileña, buscará llevar la sexta estrella a Brasil con su capacidad de desborde y su mejorada capacidad goleadora."
+      },
+      "Harry Kane": {
+        name: "Harry Kane",
+        team: "Inglaterra",
+        flag_code: "gb-eng",
+        position: "Delantero Centro",
+        club: "Bayern Múnich (Alemania)",
+        age: 32,
+        stats: { matches: 98, goals: 62, assists: 19 },
+        bio: "Máximo goleador histórico de la selección de Inglaterra. Ganador de la Bota de Oro en Rusia 2018, aporta una combinación inigualable de definición quirúrgica y capacidad para asociarse y armar juego desde tres cuartos de cancha."
+      },
+      "Jamal Musiala": {
+        name: "Jamal Musiala",
+        team: "Alemania",
+        flag_code: "de",
+        position: "Mediocampista Ofensivo / Extremo",
+        club: "Bayern Múnich (Alemania)",
+        age: 23,
+        stats: { matches: 34, goals: 6, assists: 8 },
+        bio: "La gran joya y conductor creativo del fútbol alemán. Capaz de sortear defensas enteras en una baldosa, Musiala será la carta de desequilibrio de la 'Mannschaft' para retornar a los primeros planos internacionales."
+      }
+    };
+
+    // Enriched Database for National Teams
+    const teamDb = {
+      "México": {
+        name: "México",
+        flag_code: "mx",
+        group: "Grupo A",
+        coach: "Jaime Lozano (México)",
+        ranking: 15,
+        appearances: "17 participaciones. Mejor resultado: Cuartos de final (1970, 1986).",
+        obs: "Como anfitrión en el Estadio Azteca, México cuenta con la ventaja de la localía y la altitud de la CDMX (2,240m). Se espera un planteamiento táctico ofensivo basado en transiciones rápidas y presión alta.",
+        roster: [
+          { name: "Guillermo Ochoa", pos: "Portero", club: "AVS Futebol" },
+          { name: "César Montes", pos: "Defensa", club: "Lokomotiv Moscú" },
+          { name: "Edson Álvarez", pos: "Mediocampista", club: "West Ham United" },
+          { name: "Luis Chávez", pos: "Mediocampista", club: "Dinamo Moscú" },
+          { name: "Santiago Giménez", pos: "Delantero", club: "Feyenoord" },
+          { name: "Hirving Lozano", pos: "Delantero", club: "San Diego FC" }
+        ]
+      },
+      "Italia": {
+        name: "Italia",
+        flag_code: "it",
+        group: "Grupo A",
+        coach: "Luciano Spalletti (Italia)",
+        ranking: 9,
+        appearances: "18 participaciones. Campeón en 4 ocasiones (1934, 1938, 1982, 2006).",
+        obs: "La 'Azzurra' llega renovada y con sed de revancha bajo el mando de Spalletti. Su fortaleza reside en el bloque defensivo medio y la posesión constructiva en mediocampo.",
+        roster: [
+          { name: "Gianluigi Donnarumma", pos: "Portero", club: "PSG" },
+          { name: "Alessandro Bastoni", pos: "Defensa", club: "Inter de Milán" },
+          { name: "Nicolò Barella", pos: "Mediocampista", club: "Inter de Milán" },
+          { name: "Federico Chiesa", pos: "Delantero", club: "Liverpool" },
+          { name: "Mateo Retegui", pos: "Delantero", club: "Atalanta" }
+        ]
+      },
+      "Argentina": {
+        name: "Argentina",
+        flag_code: "ar",
+        group: "Grupo C",
+        coach: "Lionel Scaloni (Argentina)",
+        ranking: 1,
+        appearances: "18 participaciones. Campeón en 3 ocasiones (1978, 1986, 2022).",
+        obs: "El vigente campeón del mundo llega con un plantel maduro y consolidado. La combinación de la experiencia de Lionel Messi junto con la dinámica de volantes como De Paul y Mac Allister posicionan a la 'Albiceleste' como seria candidata al bicampeonato.",
+        roster: [
+          { name: "Emiliano Martínez", pos: "Portero", club: "Aston Villa" },
+          { name: "Cristian Romero", pos: "Defensa", club: "Tottenham" },
+          { name: "Alexis Mac Allister", pos: "Mediocampista", club: "Liverpool" },
+          { name: "Rodrigo De Paul", pos: "Mediocampista", club: "Atlético Madrid" },
+          { name: "Lionel Messi", pos: "Delantero", club: "Inter Miami" },
+          { name: "Julián Álvarez", pos: "Delantero", club: "Atlético Madrid" }
+        ]
+      },
+      "Canadá": {
+        name: "Canadá",
+        flag_code: "ca",
+        group: "Grupo B",
+        coach: "Jesse Marsch (EE.UU.)",
+        ranking: 40,
+        appearances: "2 participaciones (1986, 2022). Nunca avanzó de fase de grupos.",
+        obs: "Co-anfitriones del torneo. Marsch implementa una filosofía de mucha intensidad física y contragolpes letales explotando la velocidad de Alphonso Davies.",
+        roster: [
+          { name: "Maxime Crépeau", pos: "Portero", club: "Portland Timbers" },
+          { name: "Alphonso Davies", pos: "Defensa/Extremo", club: "Bayern Múnich" },
+          { name: "Stephen Eustáquio", pos: "Mediocampista", club: "Porto" },
+          { name: "Jonathan David", pos: "Delantero", club: "Lille" },
+          { name: "Cyle Larin", pos: "Delantero", club: "Mallorca" }
+        ]
+      },
+      "Estados Unidos": {
+        name: "Estados Unidos",
+        flag_code: "us",
+        group: "Grupo D",
+        coach: "Mauricio Pochettino (Argentina)",
+        ranking: 11,
+        appearances: "11 participaciones. Mejor resultado: Tercer puesto (1930).",
+        obs: "Bajo la batuta táctica de Pochettino, el conjunto estadounidense busca dar el salto de calidad definitivo como local mediante un fútbol agresivo y dominante.",
+        roster: [
+          { name: "Matt Turner", pos: "Portero", club: "Crystal Palace" },
+          { name: "Antonee Robinson", pos: "Defensa", club: "Fulham" },
+          { name: "Weston McKennie", pos: "Mediocampista", club: "Juventus" },
+          { name: "Christian Pulisic", pos: "Delantero", club: "AC Milan" },
+          { name: "Folarin Balogun", pos: "Delantero", club: "Mónaco" }
+        ]
+      },
+      "Marruecos": {
+        name: "Marruecos",
+        flag_code: "ma",
+        group: "Grupo B",
+        coach: "Walid Regragui (Marruecos)",
+        ranking: 12,
+        appearances: "6 participaciones. Mejor resultado: Cuarto puesto (2022).",
+        obs: "Un grupo extremadamente disciplinado defensivamente y ordenado, con gran despliegue de laterales volantes en velocidad como Hakimi y Mazraoui.",
+        roster: [
+          { name: "Yassine Bounou", pos: "Portero", club: "Al-Hilal" },
+          { name: "Achraf Hakimi", pos: "Defensa", club: "PSG" },
+          { name: "Sofyan Amrabat", pos: "Mediocampista", club: "Fenerbahçe" },
+          { name: "Hakim Ziyech", pos: "Delantero", club: "Galatasaray" },
+          { name: "Youssef En-Nesyri", pos: "Delantero", club: "Fenerbahçe" }
+        ]
+      },
+      "España": {
+        name: "España",
+        flag_code: "es",
+        group: "Grupo H",
+        coach: "Luis de la Fuente (España)",
+        ranking: 3,
+        appearances: "16 participaciones. Campeón en 2010.",
+        obs: "Fútbol ágil y vertical por bandas. La velocidad de Nico Williams y Lamine Yamal sumados al balance defensivo de Rodri la convierten en gran candidata.",
+        roster: [
+          { name: "Unai Simón", pos: "Portero", club: "Athletic Club" },
+          { name: "Robin Le Normand", pos: "Defensa", club: "Atlético Madrid" },
+          { name: "Rodri Hernández", pos: "Mediocampista", club: "Manchester City" },
+          { name: "Dani Olmo", pos: "Mediocampista", club: "Barcelona" },
+          { name: "Lamine Yamal", pos: "Delantero", club: "Barcelona" },
+          { name: "Nico Williams", pos: "Delantero", club: "Athletic Club" }
+        ]
+      },
+      "Japón": {
+        name: "Japón",
+        flag_code: "jp",
+        group: "Grupo F",
+        coach: "Hajime Moriyasu (Japón)",
+        ranking: 17,
+        appearances: "7 participaciones. Alcanzó octavos de final en cuatro ocasiones.",
+        obs: "Bloque colectivo compacto, rigor defensivo intachable y transiciones ofensivas letales. Un equipo muy dinámico y con jugadores de gran técnica individual.",
+        roster: [
+          { name: "Zion Suzuki", pos: "Portero", club: "Parma" },
+          { name: "Ko Itakura", pos: "Defensa", club: "Borussia M." },
+          { name: "Wataru Endo", pos: "Mediocampista", club: "Liverpool" },
+          { name: "Takefusa Kubo", pos: "Mediocampista", club: "Real Sociedad" },
+          { name: "Kaoru Mitoma", pos: "Delantero", club: "Brighton" }
+        ]
+      },
+      "Polonia": {
+        name: "Polonia",
+        flag_code: "pl",
+        group: "Grupo A",
+        coach: "Michał Probierz (Polonia)",
+        ranking: 30,
+        appearances: "9 participaciones. Tercer puesto en 1974 y 1982.",
+        obs: "Esquema basado en bloque bajo y contragolpe aéreo. Lewandowski es la referencia de espaldas a los centrales para habilitar a volantes llegadores.",
+        roster: [
+          { name: "Łukasz Skorupski", pos: "Portero", club: "Bologna" },
+          { name: "Jan Bednarek", pos: "Defensa", club: "Southampton" },
+          { name: "Piotr Zieliński", pos: "Mediocampista", club: "Inter de Milán" },
+          { name: "Robert Lewandowski", pos: "Delantero", club: "Barcelona" }
+        ]
+      },
+      "Brasil": {
+        name: "Brasil",
+        flag_code: "br",
+        group: "Grupo F",
+        coach: "Dorival Júnior (Brasil)",
+        ranking: 5,
+        appearances: "22 participaciones (único país presente en todos los mundiales). Pentacampeón.",
+        obs: "La 'Verdeamarela' busca quebrar una sequía de 24 años sin copas. Con extremos explosivos y volantes dinámicos, apostarán al desequilibrio en duelos individuales.",
+        roster: [
+          { name: "Alisson Becker", pos: "Portero", club: "Liverpool" },
+          { name: "Marquinhos", pos: "Defensa", club: "PSG" },
+          { name: "Bruno Guimarães", pos: "Mediocampista", club: "Newcastle" },
+          { name: "Lucas Paquetá", pos: "Mediocampista", club: "West Ham" },
+          { name: "Vinícius Júnior", pos: "Delantero", club: "Real Madrid" },
+          { name: "Rodrygo Goes", pos: "Delantero", club: "Real Madrid" }
+        ]
+      },
+      "Camerún": {
+        name: "Camerún",
+        flag_code: "cm",
+        group: "Grupo D",
+        coach: "Marc Brys (Bélgica)",
+        ranking: 51,
+        appearances: "8 participaciones. Históricos Cuartos de final en 1990.",
+        obs: "Despliegue de mucha fortaleza física, velocidad y juego sumamente directo hacia Aboubakar y Mbeumo en ataque.",
+        roster: [
+          { name: "André Onana", pos: "Portero", club: "Manchester United" },
+          { name: "Christopher Wooh", pos: "Defensa", club: "Rennes" },
+          { name: "André-Frank Zambo Anguissa", pos: "Mediocampista", club: "Nápoles" },
+          { name: "Vincent Aboubakar", pos: "Delantero", club: "Hatayspor" },
+          { name: "Bryan Mbeumo", pos: "Delantero", club: "Brentford" }
+        ]
+      },
+      "Suiza": {
+        name: "Suiza",
+        flag_code: "ch",
+        group: "Grupo B",
+        coach: "Murat Yakin (Suiza)",
+        ranking: 19,
+        appearances: "12 participaciones. Cuartos de final (1934, 1938, 1954).",
+        obs: "Mucha disciplina de grupo, bloque defensivo coordinado comandado por Manuel Akanji y liderazgo creativo de Granit Xhaka.",
+        roster: [
+          { name: "Yann Sommer", pos: "Portero", club: "Inter de Milán" },
+          { name: "Manuel Akanji", pos: "Defensa", club: "Manchester City" },
+          { name: "Granit Xhaka", pos: "Mediocampista", club: "Bayer Leverkusen" },
+          { name: "Denis Zakaria", pos: "Mediocampista", club: "Mónaco" },
+          { name: "Breel Embolo", pos: "Delantero", club: "Mónaco" }
+        ]
+      },
+      "Gales": {
+        name: "Gales",
+        flag_code: "gb-wls",
+        group: "Grupo D",
+        coach: "Craig Bellamy (Gales)",
+        ranking: 29,
+        appearances: "2 participaciones (1958, 2022). Cuartos de final en 1958.",
+        obs: "Esquema replegado y transiciones ofensivas sumamente verticales comandadas por Wilson y Brennan Johnson.",
+        roster: [
+          { name: "Danny Ward", pos: "Portero", club: "Leicester" },
+          { name: "Joe Rodon", pos: "Defensa", club: "Leeds" },
+          { name: "Ethan Ampadu", pos: "Mediocampista", club: "Leeds" },
+          { name: "Harry Wilson", pos: "Delantero", club: "Fulham" },
+          { name: "Brennan Johnson", pos: "Delantero", club: "Tottenham" }
+        ]
+      },
+      "Arabia S.": {
+        name: "Arabia Saudita",
+        flag_code: "sa",
+        group: "Grupo C",
+        coach: "Roberto Mancini (Italia)",
+        ranking: 56,
+        appearances: "6 participaciones. Octavos de final en 1994.",
+        obs: "Planteamiento ordenado tácticamente de posesión en salida y coberturas rápidas buscando neutralizar las transiciones rivales.",
+        roster: [
+          { name: "Mohammed Al-Owais", pos: "Portero", club: "Al-Hilal" },
+          { name: "Ali Al-Bulaihi", pos: "Defensa", club: "Al-Hilal" },
+          { name: "Salem Al-Dawsari", pos: "Delantero/Extremo", club: "Al-Hilal" },
+          { name: "Firas Al-Buraikan", pos: "Delantero", club: "Al-Ahli" }
+        ]
+      }
+    };
+
+    class MiniSiteApp {
+      constructor() {
+        this.matches = [];
+        this.scorers = [];
+        this.activeFilter = 'all';
+        this.currentView = 'main'; // 'main' or 'detail'
+        this.activeMatchId = null;
+        this.isRealData = false;
+        this.eventSource = null;
+        this.countdownInterval = null;
+      }
+
+      sendHeight() {
+        setTimeout(() => {
+          if (window.parent && window.parent !== window) {
+            const height = document.documentElement.scrollHeight || document.body.scrollHeight;
+            window.parent.postMessage({ type: 'resize-iframe', height: height }, '*');
+          }
+        }, 200); // Un pequeño retardo para asegurar que el renderizado de Tailwind y Lucide haya finalizado
+      }
+
+      async init() {
+        console.log("Inicializando la app...");
+        
+        await this.loadData();
+        this.renderDashboard();
+        
+        // Spotlight header flag image loading
+        const sFlag = document.getElementById('spotlightHeaderFlag');
+        if (sFlag) sFlag.innerHTML = getFlagImgHTML("ar");
+
+        this.renderArgentinaSpotlight();
+        this.renderGoleadores();
+        this.updateStatsCards();
+        this.initCountdown();
+        
+        // Setup real time connection (SSE)
+        this.initRealTimeConnection();
+        
+        // Setup Lucide icons
+        if (window.lucide) {
+          window.lucide.createIcons();
+        }
+        
+        this.sendHeight();
+      }
+
+      normalizeMatch(raw) {
+        // If it's already normalized (mock data with object teams), apply Spanish translation too
+        if (raw.home_team && typeof raw.home_team === 'object') {
+          const homeMeta = getTeamMeta(raw.home_team.name);
+          const awayMeta = getTeamMeta(raw.away_team.name);
+          return {
+            ...raw,
+            home_team: {
+              ...raw.home_team,
+              name: homeMeta.name,
+              flag_code: (homeMeta.flag_code && homeMeta.flag_code !== 'un') ? homeMeta.flag_code : raw.home_team.flag_code
+            },
+            away_team: {
+              ...raw.away_team,
+              name: awayMeta.name,
+              flag_code: (awayMeta.flag_code && awayMeta.flag_code !== 'un') ? awayMeta.flag_code : raw.away_team.flag_code
+            }
+          };
+        }
+
+        // Normalize real API match
+        const homeMeta = getTeamMeta(raw.homeTeam);
+        const awayMeta = getTeamMeta(raw.awayTeam);
+        
+        let status = 'scheduled';
+        const now = new Date();
+        const kickoff = new Date(raw.kickoffUtc || `${raw.date}T${raw.kickoff}:00Z`);
+        const matchDurationMs = 2 * 60 * 60 * 1000; // 2 hours
+        
+        if (raw.result || (raw.homeScore !== null && now.getTime() > kickoff.getTime() + matchDurationMs)) {
+          status = 'finalized';
+        } else if (raw.homeScore !== null && now.getTime() >= kickoff.getTime() && now.getTime() <= kickoff.getTime() + matchDurationMs) {
+          status = 'live';
+        } else if (raw.status) {
+          status = raw.status;
+        }
+
+        const goals = raw.goals || [];
+
+        return {
+          id: raw.id || `raw-${raw.matchNo}`,
+          status: status,
+          stageNormalized: raw.stageNormalized ? raw.stageNormalized.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase()) : (raw.stage ? raw.stage.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase()) : 'Fase de Grupos'),
+          date: raw.kickoffUtc || `${raw.date}T${raw.kickoff}:00Z`,
+          home_team: homeMeta,
+          away_team: awayMeta,
+          home_score: raw.homeScore !== null ? raw.homeScore : 0,
+          away_score: raw.awayScore !== null ? raw.awayScore : 0,
+          time_minutes: raw.time_minutes || (status === 'live' ? Math.floor((now.getTime() - kickoff.getTime()) / 60000) : 90),
+          stadium: {
+            name: raw.stadium || "Estadio Mundialista",
+            city: raw.city || "Ciudad",
+            elevationM: raw.elevationM || (raw.stadiumId === 'estadio-azteca' ? 2240 : 10)
+          },
+          weather: raw.weather || { tempC: 20, condition: "Despejado" },
+          referee: raw.referee ? { name: raw.referee, country: "" } : { name: "Por designar", country: "" },
+          goals: goals
+        };
+      }
+
+      async loadData() {
+        try {
+          // Attempt to fetch from our WordPress PHP Proxy
+          const response = await fetch('api-proxy.php?endpoint=matches');
+          
+          if (!response.ok) {
+            throw new Error(`API respondió con status ${response.status}`);
+          }
+          
+          const rawData = await response.json();
+          
+          // Extract matches list (supporting year/count/data wrapper of real API)
+          let rawMatches = [];
+          if (Array.isArray(rawData)) {
+            rawMatches = rawData;
+          } else if (rawData && rawData.data) {
+            rawMatches = rawData.data;
+          } else if (rawData && rawData.matches) {
+            rawMatches = rawData.matches;
+          }
+          
+          // Normalize matches to support country flags and camelCase attributes
+          this.matches = rawMatches.map(m => this.normalizeMatch(m));
+          
+          // Goleadores from response if available, or fall back to mock data
+          this.scorers = rawData.scorers || zafronixMockData.scorers;
+          this.isRealData = true;
+          console.log("Cargados y normalizados datos reales de Zafronix a través del proxy");
+        } catch (error) {
+          console.warn("Fallo al conectar con el proxy. Cargando datos mock locales. Detalle:", error);
+          this.matches = zafronixMockData.matches.map(m => this.normalizeMatch(m));
+          this.scorers = zafronixMockData.scorers;
+          this.isRealData = false;
+        }
+      }
+
+      async refreshData() {
+        const reloadIcon = document.querySelector('button[onclick="app.refreshData()"] i');
+        if (reloadIcon) reloadIcon.classList.add('animate-spin');
+        
+        await this.loadData();
+        
+        if (this.currentView === 'detail' && this.activeMatchId) {
+          this.showMatchDetail(this.activeMatchId);
+        } else {
+          this.renderDashboard();
+        }
+        
+        this.renderArgentinaSpotlight();
+        this.renderGoleadores();
+        this.updateStatsCards();
+        this.initCountdown();
+        
+        if (window.lucide) {
+          window.lucide.createIcons();
+        }
+        
+        if (reloadIcon) {
+          setTimeout(() => reloadIcon.classList.remove('animate-spin'), 300);
+        }
+        
+        this.sendHeight();
+      }
+
+      // -------------------------------------------------------------
+      // TIMEZONE HELPER FUNCTIONS (Tucumán -3 / America/Argentina/Tucuman)
+      // -------------------------------------------------------------
+
+      formatToTucumanDate(dateStr) {
+        const date = new Date(dateStr);
+        const day = date.toLocaleString('es-ES', { timeZone: 'America/Argentina/Tucuman', day: '2-digit' });
+        const month = date.toLocaleString('es-ES', { timeZone: 'America/Argentina/Tucuman', month: 'short' })
+                          .replace('.', '')
+                          .toUpperCase();
+        const year = date.toLocaleString('es-ES', { timeZone: 'America/Argentina/Tucuman', year: 'numeric' });
+        return `${day} ${month} ${year}`;
+      }
+
+      formatToTucumanTime(dateStr) {
+        const date = new Date(dateStr);
+        return date.toLocaleTimeString('es-ES', {
+          timeZone: 'America/Argentina/Tucuman',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false
+        });
+      }
+
+      // -------------------------------------------------------------
+      // COUNTDOWN LOGIC (Tucumán Timezone Kickoff Check)
+      // -------------------------------------------------------------
+
+      initCountdown() {
+        if (this.countdownInterval) {
+          clearInterval(this.countdownInterval);
+        }
+
+        // Find the earliest match kickoff date or default to June 11, 2026 (15:00 Tucumán time)
+        let kickoffDate = new Date("2026-06-11T18:00:00Z"); // Start of the World Cup
+        
+        const sortedScheduled = this.matches
+          .filter(m => m.status === 'scheduled')
+          .sort((a, b) => new Date(a.date) - new Date(b.date));
+          
+        if (sortedScheduled.length > 0) {
+          kickoffDate = new Date(sortedScheduled[0].date);
+        }
+
+        const countdownSection = document.getElementById('countdownSection');
+        const daysEl = document.getElementById('cdDays');
+        const hoursEl = document.getElementById('cdHours');
+        const minutesEl = document.getElementById('cdMinutes');
+        const secondsEl = document.getElementById('cdSeconds');
+
+        if (!countdownSection || !daysEl || !hoursEl || !minutesEl || !secondsEl) return;
+
+        const updateCountdown = () => {
+          const now = new Date();
+          const diff = kickoffDate.getTime() - now.getTime();
+
+          if (diff <= 0) {
+            // Tournament started! Hide countdown
+            countdownSection.classList.add('hidden');
+            clearInterval(this.countdownInterval);
+            return;
+          }
+
+          countdownSection.classList.remove('hidden');
+
+          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+          daysEl.innerText = String(days).padStart(2, '0');
+          hoursEl.innerText = String(hours).padStart(2, '0');
+          minutesEl.innerText = String(minutes).padStart(2, '0');
+          secondsEl.innerText = String(seconds).padStart(2, '0');
+        };
+
+        updateCountdown();
+        this.countdownInterval = setInterval(updateCountdown, 1000);
+      }
+
+      // -------------------------------------------------------------
+      // UI RENDER METHODS
+      // -------------------------------------------------------------
+
+      updateStatsCards() {
+        const championEl = document.getElementById('statChampion');
+        const totalGoalsEl = document.getElementById('statTotalGoals');
+        const avgGoalsEl = document.getElementById('statAvgGoals');
+
+        // 1. Champion Check (si el elemento existe)
+        if (championEl) {
+          const finalMatch = this.matches.find(m => m.stageNormalized && m.stageNormalized.toLowerCase().includes('final') && m.status === 'finalized');
+          if (finalMatch) {
+            const winner = finalMatch.home_score > finalMatch.away_score ? finalMatch.home_team.name : finalMatch.away_team.name;
+            championEl.innerText = winner;
+            championEl.className = "text-sm font-black text-brand-bone mt-0.5 font-heading";
+          } else {
+            championEl.innerText = "Por definir";
+            championEl.className = "text-sm font-black text-brand-snow mt-0.5 font-heading";
+          }
+        }
+
+        // 2. Compute dynamic stats from current data
+        let totalGoals = 0;
+        let playedMatches = 0;
+
+        this.matches.forEach(m => {
+          if (m.status === 'live' || m.status === 'finalized') {
+            totalGoals += (m.home_score || 0) + (m.away_score || 0);
+            playedMatches++;
+          }
+        });
+
+        if (totalGoalsEl) {
+          totalGoalsEl.innerText = totalGoals;
+        }
+
+        // 3. Compute dynamic average
+        if (avgGoalsEl) {
+          if (playedMatches > 0) {
+            avgGoalsEl.innerText = (totalGoals / playedMatches).toFixed(2);
+          } else {
+            avgGoalsEl.innerText = "0.00";
+          }
+        }
+      }
+
+      renderDashboard() {
+        const liveContainer = document.getElementById('liveMatchesContainer');
+        const liveSection = document.getElementById('liveModule');
+        const fixturesContainer = document.getElementById('fixturesContainer');
+        
+        // Filter matches based on active tab
+        let filtered = this.matches;
+        if (this.activeFilter === 'live') {
+          filtered = this.matches.filter(m => m.status === 'live');
+        } else if (this.activeFilter === 'scheduled') {
+          filtered = this.matches.filter(m => m.status === 'scheduled');
+        } else if (this.activeFilter === 'finalized') {
+          filtered = this.matches.filter(m => m.status === 'finalized');
+        }
+
+        // 1. Render Live Module
+        const liveMatches = this.matches.filter(m => m.status === 'live');
+        if (liveMatches.length > 0) {
+          liveSection.classList.remove('hidden');
+          liveContainer.innerHTML = liveMatches.map(m => this.createLiveMatchCardMarkup(m)).join('');
+        } else {
+          liveSection.classList.add('hidden');
+        }
+
+        // 2. Render Fixtures List
+        if (filtered.length === 0) {
+          fixturesContainer.innerHTML = `
+            <div class="glass-card p-12 rounded-2xl text-center text-brand-slate">
+              <i data-lucide="info" class="h-8 w-8 mx-auto mb-2 text-brand-slate/60"></i>
+              <p class="text-xs">No se encontraron partidos para este filtro.</p>
+            </div>
+          `;
+          if (window.lucide) window.lucide.createIcons();
+          return;
+        }
+
+        // Group by Date for cleaner presentation
+        const grouped = {};
+        filtered.forEach(match => {
+          const dateString = this.formatToTucumanDate(match.date);
+          if (!grouped[dateString]) grouped[dateString] = [];
+          grouped[dateString].push(match);
+        });
+
+        let html = '';
+        for (const [date, matches] of Object.entries(grouped)) {
+          html += `
+            <div class="space-y-1.5">
+              <h3 class="text-[10px] font-extrabold text-brand-slate uppercase pl-1 tracking-widest">${date}</h3>
+              <div class="space-y-1.5">
+                ${matches.map(m => this.createMatchCardMarkup(m)).join('')}
+              </div>
+            </div>
+          `;
+        }
+        fixturesContainer.innerHTML = html;
+        if (window.lucide) window.lucide.createIcons();
+        this.sendHeight();
+      }
+
+      renderArgentinaSpotlight() {
+        const argContainer = document.getElementById('argentinaMatchList');
+        if (!argContainer) return;
+        
+        const isArgentina = m =>
+          m.home_team.name.toLowerCase() === 'argentina' ||
+          m.away_team.name.toLowerCase() === 'argentina';
+
+        // Próximos: live primero, luego scheduled por fecha asc
+        let argMatches = this.matches
+          .filter(m => isArgentina(m) && (m.status === 'live' || m.status === 'scheduled'))
+          .sort((a, b) => {
+            if (a.status === 'live' && b.status !== 'live') return -1;
+            if (b.status === 'live' && a.status !== 'live') return 1;
+            return new Date(a.date) - new Date(b.date);
+          })
+          .slice(0, 3);
+
+        // Si no hay próximos, mostrar los últimos 3 jugados
+        if (argMatches.length === 0) {
+          argMatches = this.matches
+            .filter(m => isArgentina(m) && m.status === 'finalized')
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .slice(0, 3)
+            .reverse();
+        }
+
+        if (argMatches.length === 0) {
+          argContainer.innerHTML = `
+            <p class="text-[10px] text-brand-slate/75 text-center py-2">No se agendaron partidos de Argentina aún.</p>
+          `;
+          return;
+        }
+
+        argContainer.innerHTML = argMatches.map(m => {
+          const isHome = m.home_team.name.toLowerCase() === 'argentina';
+          const rivalRaw = isHome ? m.away_team.name : m.home_team.name;
+          const rivalFlagCode = isHome ? m.away_team.flag_code : m.home_team.flag_code;
+          const rivalMeta = getTeamMeta(rivalRaw);
+          const rivalName = rivalMeta ? rivalMeta.name : rivalRaw;
+
+          let scoreText = 'vs';
+          let statusLabel = '';
+          let bgClass = 'bg-brand-dark/40 border border-brand-slate/15';
+
+          if (m.status === 'live') {
+            scoreText = `${m.home_score} - ${m.away_score}`;
+            statusLabel = `<span class="flex items-center gap-1 text-[8px] font-bold text-red-500 uppercase tracking-widest"><span class="h-1.5 w-1.5 rounded-full live-dot"></span> Vivo ${m.time_minutes}'</span>`;
+            bgClass = 'bg-red-950/10 border border-red-500/20';
+          } else if (m.status === 'finalized') {
+            scoreText = `${m.home_score} - ${m.away_score}`;
+            statusLabel = `<span class="text-[8px] font-bold text-brand-slate uppercase tracking-wider">Final</span>`;
+          } else {
+            const dateLabel = this.formatToTucumanDate(m.date);
+            const time = this.formatToTucumanTime(m.date);
+            scoreText = time;
+            statusLabel = `<span class="text-[8px] font-bold text-brand-slate uppercase tracking-wider">${dateLabel}</span>`;
+          }
+
+          return `
+            <div onclick="app.showMatchDetail('${m.id}')" class="p-2 rounded-xl cursor-pointer ${bgClass} hover:border-sky-400/30 transition-all flex items-center justify-between gap-2 group text-xs">
+              <div class="flex items-center gap-1.5 w-[38%]">
+                ${getFlagImgHTML("ar")}
+                <span class="font-bold text-brand-platinum group-hover:text-sky-300 transition-colors truncate">Argentina</span>
+              </div>
+              <div class="flex flex-col items-center justify-center w-[24%]">
+                <span class="text-[10px] font-black text-white px-2 py-0.5 bg-brand-dark rounded border border-brand-slate/20">${scoreText}</span>
+                ${statusLabel}
+              </div>
+              <div class="flex items-center justify-end gap-1.5 w-[38%] text-right">
+                <span class="text-brand-platinum truncate">${rivalName}</span>
+                ${getFlagImgHTML(rivalFlagCode)}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      renderGoleadores() {
+        const container = document.getElementById('scorersContainer');
+        if (!container) return;
+
+        // Use real API scorers when the tournament has begun (goals > 0)
+        const apiScorers = (this.scorers || []).filter(s => (s.goals || 0) > 0)
+          .sort((a, b) => (b.goals || 0) - (a.goals || 0))
+          .slice(0, 5);
+
+        if (apiScorers.length > 0) {
+          // Tournament in progress — show real top scorers
+          container.innerHTML = apiScorers.map(player => {
+            const teamName = player.team || player.nationality || '';
+            const meta = getTeamMeta(teamName);
+            return `
+              <div onclick="app.showPlayerDetails('${player.name}')" class="flex items-center justify-between p-2 rounded-xl bg-brand-dark/40 border border-brand-slate/15 hover:bg-brand-indigo/25 hover:border-brand-indigo/40 transition-all cursor-pointer group">
+                <div class="flex items-center gap-2.5 pl-1">
+                  <div>
+                    <h4 class="text-xs font-bold text-brand-platinum group-hover:text-brand-bone transition-colors">${player.name}</h4>
+                    <span class="text-[9px] text-brand-slate font-medium flex items-center gap-1.5 mt-0.5">
+                      ${getFlagImgHTML(meta.flag_code, 'w20')}
+                      <span>${meta.name || teamName}</span>
+                    </span>
+                  </div>
+                </div>
+                <div class="flex items-center gap-1 px-2 py-0.5 bg-brand-dark rounded-md border border-brand-slate/20">
+                  <span class="text-xs font-black text-brand-bone">${player.goals}</span>
+                  <span class="text-[9px] text-brand-slate">⚽</span>
+                </div>
+              </div>
+            `;
+          }).join('');
+        } else {
+          // Pre-tournament or no scorer data — show animated "Jugador?" placeholders
+          const placeholders = Array(5).fill(null).map((_, i) => `
+            <div class="flex items-center justify-between p-2 rounded-xl border border-brand-slate/10 bg-brand-dark/20 opacity-70">
+              <div class="flex items-center gap-2.5 pl-1">
+                <div class="w-5 h-5 rounded-full bg-brand-slate/20 border border-brand-slate/20 flex items-center justify-center shrink-0">
+                  <span class="text-[9px] text-brand-slate/50 font-bold">${i + 1}</span>
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-brand-slate/60 italic">Jugador?</h4>
+                  <span class="text-[9px] text-brand-slate/40 font-medium">Disponible al inicio</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-1 px-2 py-0.5 bg-brand-dark/50 rounded-md border border-brand-slate/15">
+                <span class="text-xs font-black text-brand-slate/40">—</span>
+                <span class="text-[9px] text-brand-slate/30">⚽</span>
+              </div>
+            </div>
+          `).join('');
+
+          container.innerHTML = `
+            ${placeholders}
+            <p class="text-[9px] text-brand-slate/50 text-center pt-1 italic">Se actualiza en tiempo real cuando comience el torneo</p>
+          `;
+        }
+        
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      createMatchCardMarkup(m) {
+        let scoreHTML = `
+          <span class="px-2.5 py-0.5 bg-brand-dark/90 border border-brand-bone/20 text-brand-bone rounded text-[9px] font-black tracking-widest hover:border-brand-bone/45 transition-all">VS</span>
+        `;
+        
+        if (m.status === 'live') {
+          scoreHTML = `
+            <div class="flex items-center gap-1.5 px-2 py-0.5 bg-red-950/15 border border-red-500/30 rounded">
+              <span class="text-xs font-black text-red-500 font-mono">${m.home_score}</span>
+              <span class="text-brand-slate text-[10px]">-</span>
+              <span class="text-xs font-black text-red-500 font-mono">${m.away_score}</span>
+            </div>
+          `;
+        } else if (m.status === 'finalized') {
+          scoreHTML = `
+            <div class="flex items-center gap-1.5 px-2 py-0.5 bg-brand-dark border border-brand-slate/20 rounded">
+              <span class="text-xs font-bold text-brand-platinum font-mono">${m.home_score}</span>
+              <span class="text-brand-slate/70 text-[10px]">-</span>
+              <span class="text-xs font-bold text-brand-platinum font-mono">${m.away_score}</span>
+            </div>
+          `;
+        } else {
+          const time = this.formatToTucumanTime(m.date);
+          scoreHTML = `
+            <span class="px-2 py-0.5 bg-brand-dark border border-brand-indigo/35 text-brand-slate rounded text-[10px] font-black tracking-wider font-mono">${time}</span>
+          `;
+        }
+
+        const groupName = m.stageNormalized.split(' - ')[1] || m.stageNormalized;
+
+        return `
+          <div onclick="app.showMatchDetail('${m.id}')" class="glass-card py-2 px-3 rounded-lg flex items-center justify-between gap-3 cursor-pointer hover:bg-brand-indigo/10 hover:border-brand-indigo/30 transition-all border border-white/5">
+            <!-- Group on Left -->
+            <div class="text-[9px] font-bold text-brand-slate uppercase tracking-wider w-1/4 sm:w-1/3 truncate">
+              ${groupName}
+            </div>
+            
+            <!-- Teams / Scores Center-Right -->
+            <div class="flex items-center justify-center gap-2 sm:gap-4 flex-1">
+              <!-- Home Team -->
+              <div onclick="event.stopPropagation(); app.showTeamDetails('${m.home_team.name}')" class="flex items-center justify-end gap-1.5 text-xs font-bold text-brand-platinum text-right w-5/12 cursor-pointer hover:text-brand-bone transition-colors">
+                <span class="truncate">${m.home_team.name}</span>
+                ${getFlagImgHTML(m.home_team.flag_code)}
+              </div>
+              
+              <!-- Score box -->
+              <div class="flex items-center justify-center min-w-[55px]">
+                ${scoreHTML}
+              </div>
+              
+              <!-- Away Team -->
+              <div onclick="event.stopPropagation(); app.showTeamDetails('${m.away_team.name}')" class="flex items-center justify-start gap-1.5 text-xs font-bold text-brand-platinum text-left w-5/12 cursor-pointer hover:text-brand-bone transition-colors">
+                ${getFlagImgHTML(m.away_team.flag_code)}
+                <span class="truncate">${m.away_team.name}</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      createLiveMatchCardMarkup(m) {
+        const isArgentina = m.home_team.name.toLowerCase() === 'argentina' || m.away_team.name.toLowerCase() === 'argentina';
+        const cardBorder = isArgentina ? 'border-sky-500/40 shadow-sky-500/5' : 'border-red-500/20';
+
+        return `
+          <div onclick="app.showMatchDetail('${m.id}')" class="glass-card p-3 rounded-xl flex flex-col md:flex-row items-center justify-between gap-4 cursor-pointer border ${cardBorder} hover:border-red-500/40 transition-all bg-gradient-to-r from-red-950/10 via-brand-dark/40 to-red-950/10 relative overflow-hidden">
+            <!-- Left Info -->
+            <div class="flex flex-col items-center md:items-start text-center md:text-left gap-0.5 md:w-1/4">
+              <span class="text-[9px] font-black text-brand-slate uppercase tracking-widest">${m.stageNormalized.toUpperCase()}</span>
+              <div class="flex items-center gap-1 text-[10px] text-brand-platinum">
+                <i data-lucide="map-pin" class="h-3 w-3 text-brand-slate/75 shrink-0"></i>
+                <span class="truncate font-medium">${m.stadium.name} (${m.stadium.city})</span>
+              </div>
+            </div>
+
+            <!-- Scoreboard Grid -->
+            <div class="flex items-center justify-center gap-3 sm:gap-6 flex-1 max-w-lg w-full">
+              <!-- Home Team -->
+              <div onclick="event.stopPropagation(); app.showTeamDetails('${m.home_team.name}')" class="flex items-center justify-end gap-2 flex-1 text-right cursor-pointer hover:text-brand-bone transition-colors">
+                <span class="text-xs sm:text-sm font-bold text-brand-snow truncate">${m.home_team.name}</span>
+                ${getFlagImgHTML(m.home_team.flag_code, "w80", "h-7 w-10 sm:h-9 sm:w-12 rounded shadow border border-white/15")}
+              </div>
+              
+              <!-- Score Box -->
+              <div class="flex flex-col items-center justify-center px-4 py-1.5 bg-black/60 border border-red-500/30 rounded-lg min-w-[90px] shadow-lg">
+                <span class="text-lg sm:text-xl font-black font-heading text-red-500 tracking-wider font-mono">${m.home_score} - ${m.away_score}</span>
+                <span class="text-[8px] text-brand-bone font-bold uppercase tracking-widest mt-0.5">MINUTO ${m.time_minutes}'</span>
+              </div>
+
+              <!-- Away Team -->
+              <div onclick="event.stopPropagation(); app.showTeamDetails('${m.away_team.name}')" class="flex items-center justify-start gap-2 flex-1 text-left cursor-pointer hover:text-brand-bone transition-colors">
+                ${getFlagImgHTML(m.away_team.flag_code, "w80", "h-7 w-10 sm:h-9 sm:w-12 rounded shadow border border-white/15")}
+                <span class="text-xs sm:text-sm font-bold text-brand-snow truncate">${m.away_team.name}</span>
+              </div>
+            </div>
+
+            <!-- Right Info -->
+            <div class="flex flex-col items-center md:items-end text-center md:text-right text-[10px] text-brand-slate md:w-1/4">
+              <span class="font-medium">Clima: ${m.weather.tempC}°C</span>
+              <span class="text-[9px] text-brand-slate/75 mt-0.5">Árbitro: ${m.referee.name}</span>
+            </div>
+          </div>
+        `;
+      }
+
+      // -------------------------------------------------------------
+      // DETAIL NAVIGATION & FILTER METHODS
+      // -------------------------------------------------------------
+
+      filterStage(filter) {
+        this.activeFilter = filter;
+        
+        const buttons = document.querySelectorAll('#stageTabs button');
+        buttons.forEach(btn => {
+          if (btn.getAttribute('onclick').includes(filter)) {
+            btn.className = "px-2.5 py-1 rounded bg-brand-indigo text-brand-snow";
+          } else {
+            btn.className = "px-2.5 py-1 rounded text-brand-slate hover:text-brand-snow";
+          }
+        });
+
+        this.renderDashboard();
+      }
+
+      showMainView() {
+        this.currentView = 'main';
+        this.activeMatchId = null;
+        
+        const main = document.getElementById('mainView');
+        const detail = document.getElementById('detailView');
+        
+        detail.classList.add('hidden');
+        main.classList.remove('hidden');
+        
+        this.renderDashboard();
+        this.renderArgentinaSpotlight();
+        this.sendHeight();
+      }
+
+      showMatchDetail(matchId) {
+        const match = this.matches.find(m => m.id === matchId);
+        if (!match) return;
+
+        this.activeMatchId = matchId;
+
+        // --- Build status badge ---
+        let statusBadge, scoreDisplay, timeLabel;
+        if (match.status === 'live') {
+          statusBadge = `<span class="flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-red-500/10 border border-red-500/30 text-red-400 text-[10px] font-semibold uppercase tracking-wider"><span class="h-1.5 w-1.5 rounded-full live-dot"></span>En Vivo</span>`;
+          scoreDisplay = `<span class="text-3xl font-black text-red-400 font-mono tracking-widest">${match.home_score} : ${match.away_score}</span>`;
+          timeLabel = `<span class="text-[10px] text-red-400 font-bold animate-pulse tracking-widest">MIN ${match.time_minutes}'</span>`;
+        } else if (match.status === 'finalized') {
+          statusBadge = `<span class="px-2.5 py-0.5 rounded-full bg-zinc-800 border border-zinc-700 text-zinc-400 text-[10px] font-semibold uppercase tracking-wider">Finalizado</span>`;
+          scoreDisplay = `<span class="text-3xl font-black text-white font-mono tracking-widest">${match.home_score} : ${match.away_score}</span>`;
+          timeLabel = `<span class="text-[10px] text-zinc-400 font-bold tracking-widest">FINAL</span>`;
+        } else {
+          const time = this.formatToTucumanTime(match.date);
+          const dateStr = this.formatToTucumanDate(match.date);
+          statusBadge = `<span class="px-2.5 py-0.5 rounded-full bg-brand-indigo/20 border border-brand-indigo/30 text-brand-slate text-[10px] font-semibold uppercase tracking-wider">Programado</span>`;
+          scoreDisplay = `<span class="text-2xl font-black text-brand-slate/60 font-mono tracking-widest">VS</span>`;
+          timeLabel = `<span class="text-[10px] text-violet-400 font-bold tracking-widest">${dateStr} · ${time}</span>`;
+        }
+
+        // --- Build goals timeline HTML ---
+        let timelineHTML;
+        if (!match.goals || match.goals.length === 0) {
+          timelineHTML = `
+            <div class="text-center text-brand-slate py-8 flex flex-col items-center gap-2">
+              <i data-lucide="clock" class="h-5 w-5 text-brand-slate/50"></i>
+              <p class="text-[10px]">Sin incidencias registradas aún.</p>
+            </div>
+          `;
+        } else {
+          const sortedGoals = [...match.goals].sort((a, b) => a.minute - b.minute);
+          timelineHTML = `
+            <div class="relative space-y-3 pl-7 border-l border-brand-slate/25 ml-1">
+              ${sortedGoals.map(goal => {
+                const isHome = goal.team === 'home';
+                const flagCode = isHome ? match.home_team.flag_code : match.away_team.flag_code;
+                const teamName = isHome ? match.home_team.name : match.away_team.name;
+                let typeLabel = '';
+                if (goal.type === 'penalty') typeLabel = '<span class="text-[9px] text-brand-bone font-bold">(Pen.)</span>';
+                else if (goal.type === 'own_goal') typeLabel = '<span class="text-[9px] text-red-400 font-bold">(Autogol)</span>';
+                return `
+                  <div class="flex items-center gap-3 relative">
+                    <div class="absolute -left-[1.95rem] top-1 h-3 w-3 rounded-full border-2 border-brand-dark bg-brand-indigo shadow"></div>
+                    ${getFlagImgHTML(flagCode)}
+                    <div class="flex-1">
+                      <span class="text-[9px] text-brand-slate block">${teamName} &middot; min. ${goal.minute}'</span>
+                      <span class="text-[10px] font-bold text-brand-snow">${goal.scorer} ${typeLabel}</span>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          `;
+        }
+
+        // --- Build data cards ---
+        const stadiumInfo = match.stadium ? `${match.stadium.name}, ${match.stadium.city}` : '—';
+        const elevInfo    = match.stadium ? `${match.stadium.elevationM.toLocaleString('es-ES')} m` : '—';
+        const weatherInfo = match.weather ? `${match.weather.tempC}°C · ${match.weather.condition}` : '—';
+        const refereeInfo = match.referee && match.referee.name !== 'Por designar'
+          ? `${match.referee.name}${match.referee.country ? ` (${match.referee.country})` : ''}`
+          : 'Por designar';
+
+        // --- Inject into modal ---
+        const titleEl   = document.getElementById('matchModalTitle');
+        const contentEl = document.getElementById('matchModalContent');
+
+        titleEl.innerHTML = `<i data-lucide="calendar" class="h-3.5 w-3.5"></i> ${match.stageNormalized}`;
+
+        contentEl.innerHTML = `
+          <!-- Scoreboard -->
+          <div class="bg-gradient-to-br from-brand-dark via-brand-indigo/10 to-brand-dark rounded-xl p-4 sm:p-5 border border-white/8 text-center">
+            <div class="flex items-center justify-center gap-2 mb-4">${statusBadge}</div>
+            <div class="grid grid-cols-3 items-center gap-2 sm:gap-4">
+              <div onclick="app.closeMatchModal(); setTimeout(()=>app.showTeamDetails('${match.home_team.name}'),150)" class="flex flex-col items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity group">
+                ${getFlagImgHTML(match.home_team.flag_code, 'w80', 'h-8 w-11 sm:h-10 sm:w-14 rounded shadow border border-white/15')}
+                <span class="text-xs sm:text-sm font-black text-white group-hover:text-brand-bone transition-colors">${match.home_team.name}</span>
+                <span class="text-[9px] text-brand-slate">Local</span>
+              </div>
+              <div class="flex flex-col items-center gap-1.5 py-3 px-3 bg-black/50 border border-brand-slate/20 rounded-xl">
+                ${scoreDisplay}
+                ${timeLabel}
+              </div>
+              <div onclick="app.closeMatchModal(); setTimeout(()=>app.showTeamDetails('${match.away_team.name}'),150)" class="flex flex-col items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity group">
+                ${getFlagImgHTML(match.away_team.flag_code, 'w80', 'h-8 w-11 sm:h-10 sm:w-14 rounded shadow border border-white/15')}
+                <span class="text-xs sm:text-sm font-black text-white group-hover:text-brand-bone transition-colors">${match.away_team.name}</span>
+                <span class="text-[9px] text-brand-slate">Visitante</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Data Cards -->
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-brand-dark/50 border border-brand-slate/15 p-2.5 rounded-xl flex items-center gap-2.5 min-w-0">
+              <div class="p-1.5 rounded-lg bg-brand-indigo/15 border border-brand-indigo/20 shrink-0"><i data-lucide="map-pin" class="h-3.5 w-3.5 text-brand-slate"></i></div>
+              <div class="min-w-0">
+                <span class="text-[9px] text-brand-slate block uppercase font-bold tracking-wider">Sede</span>
+                <span class="text-[10px] font-semibold text-brand-platinum truncate block">${stadiumInfo}</span>
+              </div>
+            </div>
+            <div class="bg-brand-dark/50 border border-brand-slate/15 p-2.5 rounded-xl flex items-center gap-2.5">
+              <div class="p-1.5 rounded-lg bg-brand-indigo/15 border border-brand-indigo/20 shrink-0"><i data-lucide="mountain" class="h-3.5 w-3.5 text-brand-slate"></i></div>
+              <div>
+                <span class="text-[9px] text-brand-slate block uppercase font-bold tracking-wider">Altitud</span>
+                <span class="text-[10px] font-semibold text-brand-platinum">${elevInfo}</span>
+              </div>
+            </div>
+            <div class="bg-brand-dark/50 border border-brand-slate/15 p-2.5 rounded-xl flex items-center gap-2.5">
+              <div class="p-1.5 rounded-lg bg-brand-bone/10 border border-brand-bone/15 shrink-0"><i data-lucide="cloud-sun" class="h-3.5 w-3.5 text-brand-slate"></i></div>
+              <div>
+                <span class="text-[9px] text-brand-slate block uppercase font-bold tracking-wider">Clima</span>
+                <span class="text-[10px] font-semibold text-brand-platinum">${weatherInfo}</span>
+              </div>
+            </div>
+            <div class="bg-brand-dark/50 border border-brand-slate/15 p-2.5 rounded-xl flex items-center gap-2.5 min-w-0">
+              <div class="p-1.5 rounded-lg bg-brand-bone/10 border border-brand-bone/15 shrink-0"><i data-lucide="user" class="h-3.5 w-3.5 text-brand-slate"></i></div>
+              <div class="min-w-0">
+                <span class="text-[9px] text-brand-slate block uppercase font-bold tracking-wider">Árbitro</span>
+                <span class="text-[10px] font-semibold text-brand-platinum truncate block">${refereeInfo}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Timeline -->
+          <div>
+            <h4 class="text-[10px] font-bold text-brand-slate uppercase tracking-widest mb-3 flex items-center gap-1.5">
+              <i data-lucide="activity" class="h-3.5 w-3.5"></i>
+              Incidencias del Partido
+            </h4>
+            ${timelineHTML}
+          </div>
+        `;
+
+        // Open modal
+        const modal = document.getElementById('matchModal');
+        const card  = document.getElementById('matchModalCard');
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        card.classList.remove('scale-95');
+
+        if (window.lucide) window.lucide.createIcons();
+        this.sendHeight();
+      }
+
+      closeMatchModal() {
+        const modal = document.getElementById('matchModal');
+        const card  = document.getElementById('matchModalCard');
+        if (modal && card) {
+          modal.classList.add('opacity-0', 'pointer-events-none');
+          card.classList.add('scale-95');
+        }
+      }
+
+      renderTimeline(match) {
+        const container = document.getElementById('timelineContainer');
+        const timelineBar = document.getElementById('timelineBar');
+        
+        if (!match.goals || match.goals.length === 0) {
+          container.innerHTML = `
+            <div class="text-center text-brand-slate py-12 flex flex-col items-center">
+              <i data-lucide="info" class="h-6 w-6 text-brand-slate/60 mb-2"></i>
+              <p class="text-xs">Sin incidencias registradas en este partido aún.</p>
+            </div>
+          `;
+          if (timelineBar) timelineBar.classList.add('hidden');
+          if (window.lucide) window.lucide.createIcons();
+          return;
+        }
+
+        if (timelineBar) timelineBar.classList.remove('hidden');
+
+        const sortedGoals = [...match.goals].sort((a, b) => a.minute - b.minute);
+
+        container.innerHTML = sortedGoals.map(goal => {
+          const isHome = goal.team === 'home';
+          
+          let goalTypeLabel = '';
+          if (goal.type === 'penalty') goalTypeLabel = '<span class="text-[9px] uppercase tracking-wider font-bold text-brand-bone">(Penal)</span>';
+          else if (goal.type === 'own_goal') goalTypeLabel = '<span class="text-[9px] uppercase tracking-wider font-bold text-red-500">(Autogol)</span>';
+
+          const flagCode = isHome ? match.home_team.flag_code : match.away_team.flag_code;
+          const alignClass = isHome ? 'md:flex-row-reverse md:text-right' : 'md:flex-row md:text-left';
+          const dotOffset = 'left-6 md:left-1/2 md:-translate-x-1/2';
+
+          return `
+            <div class="relative flex flex-col md:flex-row items-start gap-4 md:gap-0 ${alignClass} pl-10 md:pl-0">
+              <div class="absolute ${dotOffset} top-1 h-3.5 w-3.5 rounded-full border-2 border-brand-dark bg-brand-indigo flex items-center justify-center shadow-md">
+                <span class="h-1 w-1 rounded-full bg-white"></span>
+              </div>
+              
+              <div class="w-full md:w-[46%] px-0 md:px-6">
+                <div class="glass-card p-3 rounded-xl border border-brand-slate/15 bg-brand-indigo/15 flex items-center gap-3 ${isHome ? 'md:flex-row-reverse' : ''}">
+                  ${getFlagImgHTML(flagCode)}
+                  <div class="flex-1">
+                    <span class="text-[9px] font-bold text-brand-slate block">Minuto ${goal.minute}'</span>
+                    <h4 class="text-xs sm:text-sm font-bold text-brand-snow flex flex-wrap items-center gap-1.5">
+                      ${goal.scorer}
+                      ${goalTypeLabel}
+                    </h4>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="hidden md:block md:w-[8%]"></div>
+              <div class="hidden md:block md:w-[46%]"></div>
+            </div>
+          `;
+        }).join('');
+        
+        if (window.lucide) window.lucide.createIcons();
+      }
+
+      // -------------------------------------------------------------
+      // MODAL LOGIC (Details & Observations)
+      // -------------------------------------------------------------
+
+      openModal() {
+        const modal = document.getElementById('infoModal');
+        const card = document.getElementById('infoModalCard');
+        if (modal && card) {
+          modal.classList.remove('opacity-0', 'pointer-events-none');
+          card.classList.remove('scale-95');
+        }
+      }
+
+      closeModal() {
+        const modal = document.getElementById('infoModal');
+        const card = document.getElementById('infoModalCard');
+        if (modal && card) {
+          modal.classList.add('opacity-0', 'pointer-events-none');
+          card.classList.add('scale-95');
+        }
+      }
+
+      async showPlayerDetails(name) {
+        console.log("Mostrando detalles de jugador:", name);
+        this.openModal();
+        
+        const titleEl = document.getElementById('infoModalTitle');
+        const contentEl = document.getElementById('infoModalContent');
+        
+        titleEl.innerText = "Cargando perfil...";
+        contentEl.innerHTML = `
+          <div class="flex flex-col items-center justify-center py-12">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-indigo mb-3"></div>
+            <p class="text-brand-slate">Obteniendo datos de la API...</p>
+          </div>
+        `;
+        
+        try {
+          let playerData = playerDb[name] || playerDb[name.replace(' Jr', ' Júnior')] || null;
+          
+          try {
+            const response = await fetch(`api-proxy.php?endpoint=player&name=${encodeURIComponent(name)}`);
+            if (response.ok) {
+              const apiData = await response.json();
+              if (apiData && !apiData.error) {
+                playerData = { ...playerData, ...apiData };
+              }
+            }
+          } catch (err) {
+            console.warn("Fallo al obtener datos reales de jugador de la API, usando fallback", err);
+          }
+          
+          if (!playerData) {
+            playerData = {
+              name: name,
+              team: "Desconocido",
+              flag_code: "un",
+              position: "Delantero / Centrocampista",
+              club: "Club Profesional",
+              age: 26,
+              stats: { matches: 15, goals: 2, assists: 1 },
+              bio: "Jugador profesional de fútbol participante en el Mundial 2026. Destacado por su rendimiento regular en ligas de alto nivel."
+            };
+          }
+          
+          titleEl.innerHTML = `<i data-lucide="user" class="h-4.5 w-4.5 text-brand-bone"></i> Perfil de Jugador`;
+          
+          contentEl.innerHTML = `
+            <div class="text-center pb-2">
+              <h3 class="text-base font-bold text-white">${playerData.name}</h3>
+              <p class="text-xs text-brand-slate font-semibold flex items-center justify-center gap-1.5 mt-1">
+                ${getFlagImgHTML(playerData.flag_code, "w20")}
+                <span>Selección de ${playerData.team}</span>
+              </p>
+            </div>
+            
+            <div class="grid grid-cols-3 gap-3 text-center">
+              <div class="bg-brand-dark/50 border border-brand-slate/15 p-2.5 rounded-xl">
+                <span class="text-[9px] text-brand-slate uppercase font-bold tracking-wider block">Partidos</span>
+                <span class="text-sm font-black text-white font-mono">${playerData.stats?.matches || 0}</span>
+              </div>
+              <div class="bg-brand-dark/50 border border-brand-slate/15 p-2.5 rounded-xl">
+                <span class="text-[9px] text-brand-slate uppercase font-bold tracking-wider block">Goles</span>
+                <span class="text-sm font-black text-brand-bone font-mono">${playerData.stats?.goals || 0}</span>
+              </div>
+              <div class="bg-brand-dark/50 border border-brand-slate/15 p-2.5 rounded-xl">
+                <span class="text-[9px] text-brand-slate uppercase font-bold tracking-wider block">Asistencias</span>
+                <span class="text-sm font-black text-brand-bone font-mono">${playerData.stats?.assists || 0}</span>
+              </div>
+            </div>
+            
+            <div class="space-y-2.5 bg-brand-indigo/15 border border-brand-slate/15 p-4 rounded-xl text-xs">
+              <p class="flex justify-between">
+                <span class="text-brand-slate">Club actual:</span>
+                <span class="text-brand-platinum font-semibold">${playerData.club}</span>
+              </p>
+              <p class="flex justify-between">
+                <span class="text-brand-slate">Posición en el campo:</span>
+                <span class="text-brand-platinum font-semibold">${playerData.position}</span>
+              </p>
+              <p class="flex justify-between">
+                <span class="text-brand-slate">Edad del atleta:</span>
+                <span class="text-brand-platinum font-semibold">${playerData.age} años</span>
+              </p>
+            </div>
+            
+            <div class="space-y-1.5">
+              <h4 class="text-[10px] font-bold text-brand-slate uppercase tracking-widest pl-1">Trayectoria y Observaciones</h4>
+              <div class="bg-brand-dark/50 border border-brand-slate/15 p-3.5 rounded-xl text-brand-snow leading-relaxed text-xs">
+                ${playerData.bio}
+              </div>
+            </div>
+          `;
+          if (window.lucide) window.lucide.createIcons();
+          this.sendHeight();
+        } catch (error) {
+          console.error("Error al renderizar detalles de jugador:", error);
+          titleEl.innerText = "Error";
+          contentEl.innerHTML = `
+            <div class="bg-red-950/20 border border-red-500/30 p-4 rounded-xl text-xs text-red-400">
+              <p class="font-bold">No se pudieron cargar los datos:</p>
+              <p class="mt-1 font-mono text-[10px]">${error.message}</p>
+              <button onclick="app.showPlayerDetails('${name}')" class="mt-3 px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 border border-red-500/40 rounded-lg text-[10px] text-white font-bold transition-all">Reintentar</button>
+            </div>
+          `;
+          this.sendHeight();
+        }
+      }
+
+      async showTeamDetails(teamName) {
+        console.log("Mostrando detalles de equipo:", teamName);
+        this.openModal();
+        
+        const titleEl = document.getElementById('infoModalTitle');
+        const contentEl = document.getElementById('infoModalContent');
+        
+        titleEl.innerText = "Cargando plantel...";
+        contentEl.innerHTML = `
+          <div class="flex flex-col items-center justify-center py-12">
+            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-indigo mb-3"></div>
+            <p class="text-brand-slate">Obteniendo datos de la API...</p>
+          </div>
+        `;
+        
+        try {
+          let teamData = teamDb[teamName] || teamDb[teamName.replace(' S.', '')] || null;
+          let apiRoster = null;
+          
+          try {
+            const response = await fetch(`api-proxy.php?endpoint=roster&name=${encodeURIComponent(teamName)}`);
+            if (response.ok) {
+              const data = await response.json();
+              if (Array.isArray(data)) {
+                apiRoster = data;
+              } else if (data && data.roster) {
+                apiRoster = data.roster;
+              }
+            }
+          } catch (err) {
+            console.warn("Fallo al obtener plantel de la API, usando mock", err);
+          }
+          
+          if (!teamData) {
+            const mappedMeta = getTeamMeta(teamName);
+            teamData = {
+              name: teamName,
+              flag_code: mappedMeta.flag_code,
+              group: "Por definir",
+              coach: "Director Técnico no asignado",
+              ranking: 99,
+              appearances: "Participante del Mundial 2026.",
+              obs: "Equipo clasificado para la fase final de la Copa Mundial de la FIFA 2026.",
+              roster: []
+            };
+          }
+          
+          const displayRoster = apiRoster || teamData.roster || [];
+          
+          titleEl.innerHTML = `${getFlagImgHTML(teamData.flag_code, "w80", "h-6 w-9 rounded shadow border border-white/15")} <span class="font-heading ml-1.5">${teamData.name}</span>`;
+          
+          let rosterHtml = '';
+          if (displayRoster.length > 0) {
+            rosterHtml = displayRoster.map(player => `
+              <div class="flex items-center justify-between p-2 rounded-xl bg-brand-dark/50 border border-brand-slate/15 text-[11px] hover:border-brand-indigo/25 hover:bg-brand-indigo/10 transition-all">
+                <div>
+                  <span class="font-bold text-brand-snow">${player.name}</span>
+                  <span class="text-[9px] text-brand-slate block">${player.club || 'Club no disponible'}</span>
+                </div>
+                <span class="px-2 py-0.5 rounded bg-brand-indigo/15 text-brand-slate font-semibold text-[9px] uppercase tracking-wider">${player.pos || player.position || 'Jugador'}</span>
+              </div>
+            `).join('');
+          } else {
+            rosterHtml = `<p class="text-[11px] text-brand-slate italic text-center py-4">Plantel no cargado o no disponible en este momento.</p>`;
+          }
+          
+          contentEl.innerHTML = `
+            <div class="space-y-3 bg-brand-indigo/15 border border-brand-slate/15 p-4 rounded-xl">
+              <div class="flex items-center gap-3">
+                ${getFlagImgHTML(teamData.flag_code, "w80", "h-8 w-12 rounded shadow border border-white/15")}
+                <div>
+                  <h4 class="text-sm font-extrabold text-white">${teamData.name}</h4>
+                  <p class="text-[10px] text-brand-slate font-semibold uppercase tracking-wider">${teamData.group} • Ranking FIFA: #${teamData.ranking}</p>
+                </div>
+              </div>
+              <div class="border-t border-white/5 pt-2.5 text-[11px] space-y-1.5">
+                <p><span class="text-brand-slate">Director Técnico:</span> <span class="text-brand-platinum font-medium">${teamData.coach}</span></p>
+                <p><span class="text-brand-slate">Historial:</span> <span class="text-brand-platinum font-medium">${teamData.appearances}</span></p>
+              </div>
+            </div>
+            
+            <div class="space-y-1.5">
+              <h4 class="text-[10px] font-bold text-brand-slate uppercase tracking-widest pl-1">Observaciones Tácticas</h4>
+              <div class="bg-brand-dark/50 border border-brand-slate/15 p-3.5 rounded-xl text-brand-platinum leading-relaxed text-[11px]">
+                ${teamData.obs}
+              </div>
+            </div>
+            
+            <div class="space-y-1.5">
+              <h4 class="text-[10px] font-bold text-brand-slate uppercase tracking-widest pl-1">Jugadores Clave (Convocatoria)</h4>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[180px] overflow-y-auto pr-1">
+                ${rosterHtml}
+              </div>
+            </div>
+          `;
+          
+          if (window.lucide) window.lucide.createIcons();
+          this.sendHeight();
+        } catch (error) {
+          console.error("Error al renderizar detalles de equipo:", error);
+          titleEl.innerText = "Error";
+          contentEl.innerHTML = `
+            <div class="bg-red-950/20 border border-red-500/30 p-4 rounded-xl text-xs text-red-400">
+              <p class="font-bold">No se pudieron cargar los datos:</p>
+              <p class="mt-1 font-mono text-[10px]">${error.message}</p>
+              <button onclick="app.showTeamDetails('${teamName}')" class="mt-3 px-3 py-1.5 bg-red-500/20 hover:bg-red-500/30 border border-red-500/40 rounded-lg text-[10px] text-white font-bold transition-all">Reintentar</button>
+            </div>
+          `;
+          this.sendHeight();
+        }
+      }
+
+      // -------------------------------------------------------------
+      // LIVE SSE STREAM DATA CONNECTION
+      // -------------------------------------------------------------
+
+      initRealTimeConnection() {
+        if (!this.isRealData) {
+          console.log("Servidor en modo local/mock. No se conectará el stream SSE.");
+          return;
+        }
+
+        // Desactivar SSE en dispositivos móviles para evitar saturación de conexiones HTTP/1.1 y procesos PHP-FPM
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+        if (isMobile) {
+          console.log("Dispositivo móvil detectado. Conexión SSE omitida para optimizar conexiones del dominio.");
+          return;
+        }
+
+        try {
+          if (this.eventSource) {
+            this.eventSource.close();
+          }
+
+          this.eventSource = new EventSource('api-proxy.php?endpoint=stream');
+
+          this.eventSource.onopen = () => {
+            console.log("Conectado con éxito a la transmisión en vivo SSE");
+          };
+
+          this.eventSource.addEventListener('match.scoreUpdated', (event) => {
+            console.log("Recibido evento scoreUpdated:", event.data);
+            const data = JSON.parse(event.data);
+            this.handleLiveUpdate(data);
+          });
+
+          this.eventSource.addEventListener('match.finalized', (event) => {
+            console.log("Recibido evento matchFinalized:", event.data);
+            const data = JSON.parse(event.data);
+            this.handleLiveUpdate(data);
+          });
+
+          this.eventSource.onerror = (err) => {
+            console.error("Error en la conexión del stream SSE. Reconectando...", err);
+          };
+
+        } catch (e) {
+          console.error("No se pudo iniciar EventSource:", e);
+        }
+      }
+
+      handleLiveUpdate(liveMatch) {
+        const idx = this.matches.findIndex(m => m.id === liveMatch.id);
+        if (idx !== -1) {
+          this.matches[idx] = { ...this.matches[idx], ...this.normalizeMatch(liveMatch) };
+          
+          if (this.currentView === 'detail' && this.activeMatchId === liveMatch.id) {
+            this.showMatchDetail(liveMatch.id);
+          } else if (this.currentView === 'main') {
+            this.renderDashboard();
+            this.renderArgentinaSpotlight();
+          }
+          
+          this.updateStatsCards();
+          this.initCountdown();
+          this.showLiveAlert(liveMatch);
+        }
+      }
+
+      showLiveAlert(match) {
+        const toast = document.getElementById('liveAlertToast');
+        const textLabel = document.getElementById('liveAlertText');
+        if (!toast || !textLabel) return;
+
+        textLabel.innerText = `${match.home_team?.name || match.homeTeam} ${match.home_score || match.homeScore} - ${match.away_score || match.awayScore} ${match.away_team?.name || match.awayTeam}`;
+        
+        // Display toast
+        toast.classList.remove('opacity-0', 'translate-y-8', 'pointer-events-none');
+        toast.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+
+        if (window.lucide) window.lucide.createIcons();
+
+        // Auto hide after 6 seconds
+        setTimeout(() => {
+          toast.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+          toast.classList.add('opacity-0', 'translate-y-8', 'pointer-events-none');
+        }, 6000);
+      }
+    }
+
+    // Instantiate and expose globally so HTML event attributes (onclick="app.refreshData()") can resolve.
+    const app = new MiniSiteApp();
+    window.app = app;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      app.init();
+    });
+  </script>
+</body>
+</html>
