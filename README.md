@@ -41,12 +41,7 @@ X-API-Key: TU_API_KEY
 Authorization: Bearer TU_API_KEY
 ```
 
-La **clave gratuita** incluida en este proyecto es de nivel free tier y suficiente para uso personal/demo:
-```
-zwc_free_363fea4ab6decd2bf80f624d
-```
-
-> Para proyectos en producción con alto tráfico, podés registrar tu propia key en [zafronix.com](https://zafronix.com).
+> Registrá tu propia key gratuita en [zafronix.com](https://zafronix.com) y configurala como variable de entorno `ZAFRONIX_API_KEY` en el servidor.
 
 ---
 
@@ -56,9 +51,6 @@ zwc_free_363fea4ab6decd2bf80f624d
 mini-site-w2026/
 ├── index.html          # App completa (HTML + CSS inline + JS)
 ├── api-proxy.php       # Proxy PHP para el servidor (oculta la API key del frontend)
-├── wc2026/
-│   ├── index.html      # Copia lista para subir por FTP
-│   └── api-proxy.php   # Proxy para producción
 ├── src/
 │   └── input.css       # Tailwind entry point (para build local)
 ├── tailwind.config.js
@@ -107,9 +99,13 @@ npm run dev
 
 ## 🚀 Deploy en WordPress
 
-1. Copiar `wc2026/index.html` y `wc2026/api-proxy.php` al servidor vía FTP.
-2. El proxy requiere PHP con extensión `curl` habilitada.
-3. La carpeta `cache/` se crea automáticamente con permisos `755`.
+1. Subir `index.html` y `api-proxy.php` al servidor vía FTP.
+2. Configurar la variable de entorno `ZAFRONIX_API_KEY` en `wp-config.php`:
+   ```php
+   putenv('ZAFRONIX_API_KEY=tu_clave_aqui');
+   ```
+3. El proxy requiere PHP con extensión `curl` habilitada.
+4. La carpeta `cache/` se crea automáticamente con permisos `755`.
 
 ---
 
