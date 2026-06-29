@@ -231,10 +231,10 @@ function computeMatchesTTL($cache_file) {
 
     // Normalizar estructura de respuesta (Zafronix puede devolver distintas envolturas).
     $matches = [];
-    if (isset($data['data']) && is_array($data['data']))       $matches = $data['data'];
+    if (isset($data['data']) && is_array($data['data']))           $matches = $data['data'];
     elseif (isset($data['matches']) && is_array($data['matches'])) $matches = $data['matches'];
     elseif (isset($data['results']) && is_array($data['results'])) $matches = $data['results'];
-    elseif (isset($data[0]))                                    $matches = $data;
+    elseif (isset($data[0]))                                        $matches = $data;
 
     if (empty($matches)) return CACHE_TTL_MATCHES_IDLE;
 
@@ -254,11 +254,9 @@ function computeMatchesTTL($cache_file) {
         if (!empty($m['kickoffUtc'])) {
             $kickoffStr = $m['kickoffUtc'];
         } elseif (!empty($m['date']) && !empty($m['kickoff'])) {
-            // Combina "2026-06-22" + "20:00" → "2026-06-22T20:00:00Z"
             $kickoffStr = $m['date'] . 'T' . $m['kickoff'] . ':00Z';
         } elseif (!empty($m['date'])) {
-            // Solo fecha sin hora: no se puede usar para detección horaria.
-            continue;
+            continue; // solo fecha sin hora, no sirve para detección horaria
         } else {
             continue;
         }
@@ -267,6 +265,10 @@ function computeMatchesTTL($cache_file) {
         if (substr($kickoffStr, -1) !== 'Z' && !preg_match('/[+-]\d{2}:?\d{2}$/', $kickoffStr)) {
             $kickoffStr .= 'Z';
         }
+
+        // strtotime() no entiende milisegundos (".000Z"). Los removemos antes de parsear.
+        // Sin esto, "2026-06-24T19:00:00.000Z" devuelve false y el TTL siempre queda en IDLE.
+        $kickoffStr = preg_replace('/\.\d+Z$/', 'Z', $kickoffStr);
 
         $kickoff = strtotime($kickoffStr);
         if ($kickoff === false || $kickoff < 0) continue;

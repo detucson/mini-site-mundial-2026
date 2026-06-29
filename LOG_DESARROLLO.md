@@ -1,5 +1,8 @@
 # Bitácora de Desarrollo — Minisite Moderno & Tailwind
 
+> [!IMPORTANT]
+> **Vinculación con el Cerebro Digital (Obsidian):** Este proyecto está documentado en el vault centralizado de NOAX bajo el código **PROY-2026-006** (Ficha física: [PROY-2026-006_mini-site-w2026.md](file:///D:/cerebro/cerebro-noax/02_Productos_Proyectos/Proyectos/PROY-2026-006_mini-site-w2026.md)).
+
 Diario de ingeniería del desarrollo de la landing page de alto impacto para la reestructuración del proyecto, utilizando Vite y Tailwind CSS.
 
 ---

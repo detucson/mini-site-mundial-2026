@@ -1,0 +1,16 @@
+# Evita el caché del HTML del mini-site (datos en vivo durante el Mundial).
+# El index.html debe servirse siempre fresco; los datos los maneja api-proxy.php.
+<FilesMatch "\.html$">
+  <IfModule mod_headers.c>
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </IfModule>
+</FilesMatch>
+
+# Asegura que el proxy PHP nunca quede cacheado por el navegador/CDN.
+<FilesMatch "api-proxy\.php$">
+  <IfModule mod_headers.c>
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </IfModule>
+</FilesMatch>

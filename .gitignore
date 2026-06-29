@@ -1,6 +1,7 @@
 node_modules/
 dist/
 cache/
+secret-config.php
 *.log
 .DS_Store
 Thumbs.db
